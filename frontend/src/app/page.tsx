@@ -1,13 +1,23 @@
+'use client';
+
+import React from 'react';
+import Header from '../components/Header';
+import LocationBar from '../components/LocationBar';
+import RaceAlertBanner from '../components/RaceAlertBanner';
+import MenuCatalog from '../components/MenuCatalog';
+import CartDrawer from '../components/CartDrawer';
+
 export default function Home() {
   return (
-    // Makes page at least full height of screen. 
-    <main className="min-h-screen w-full">
+    <div className="min-h-screen bg-pitstop-background text-pitstop-text flex flex-col items-center">
       {/* Mobile container - full width up to 430px, centered on larger screens */}
-      <div className="mx-auto w-full max-w-[430px] px-4">
-        <h1>
-          Pit Stop Food & Merch Drop
-        </h1>
-      </div>
-    </main>
+      <main className="w-full max-w-[430px] flex flex-col min-h-screen bg-pitstop-background border-x border-pitstop-border shadow-raised relative">
+        <Header />
+        <LocationBar />
+        <RaceAlertBanner />
+        <MenuCatalog />
+        <CartDrawer />
+      </main>
+    </div>
   );
 }
