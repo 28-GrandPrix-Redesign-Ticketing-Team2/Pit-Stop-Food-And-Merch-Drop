@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 export default function Home() {
   return (
     // Makes page at least full height of screen. 
