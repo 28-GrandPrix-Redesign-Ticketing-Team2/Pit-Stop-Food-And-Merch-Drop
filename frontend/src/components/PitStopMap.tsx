@@ -5,9 +5,13 @@ import Map, { GeolocateControl, Marker, NavigationControl } from "react-map-gl/m
 import "mapbox-gl/dist/mapbox-gl.css";
 import { PIT_STOPS, ALBERT_PARK_CORDINATES, DEMO_LOCATION } from "@/data/mapConstantData";
 import { Icon } from "@iconify/react";
+import { useDemoMode } from "./DemoProvider";
 
 export default function PitStopMap() {
+    // Read global Demo Mode state
+    const { demoMode } = useDemoMode();
     return (
+        // Centered Albert Park
         <Map
             mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
             initialViewState={{
@@ -22,6 +26,8 @@ export default function PitStopMap() {
                 height: "500px",
             }}
         >
+
+            {/* Pit Stops locations */}
             {PIT_STOPS.map((pitStop) => (
                 <Marker
                     key={pitStop.id}
@@ -43,16 +49,18 @@ export default function PitStopMap() {
             />
 
             {/* Demo User Location */}
-            <Marker
-                longitude={DEMO_LOCATION.longitude}
-                latitude={DEMO_LOCATION.latitude}
-            >
-                <Icon
-                    icon="mdi:map-marker-circle"
-                    width="30"
-                    color="#5EA0EE"
-                />
-            </Marker>
+            {demoMode && (
+                <Marker
+                    longitude={DEMO_LOCATION.longitude}
+                    latitude={DEMO_LOCATION.latitude}
+                >
+                    <Icon
+                        icon="mdi:map-marker-circle"
+                        width="30"
+                        color="#5EA0EE"
+                    />
+                </Marker>
+            )}
 
             <NavigationControl position="top-right" />
         </Map>
