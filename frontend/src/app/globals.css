@@ -5,6 +5,41 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Surfaces */
+  --color-page-background: #F5F5F7;
+  --color-surface: #FFFFFF;
+  --color-surface-selected: #FFF5F5;
+
+  /* Borders */
+  --color-border: #E5E5EA;
+
+  /* Text */
+  --color-text-primary: #050505;
+  --color-text-muted: #6B6B72;
+  --color-text-on-primary: #FFFFFF;
+
+  /* Brand & Actions */
+  --color-brand-primary: #E10600;
+
+  /* Status */
+  --color-status-success: #00D67A;
+  --color-status-danger: #FF3B30;
+  --color-status-info: #2F80FF;
+  --color-status-warning: #C8A800;
+  --color-status-neutral: #6B6B72;
+
+  /* Status backgrounds - 10% */
+  --color-status-success-bg: rgb(0 214 122 / 10%);
+  --color-status-danger-bg: rgb(255 59 48 / 10%);
+  --color-status-info-bg: rgb(47 128 255 / 10%);
+  --color-status-warning-bg: rgb(200 168 0 / 10%);
+  --color-status-brand-bg: rgb(225 6 0 / 10%);
+  --color-status-neutral-bg: rgb(107 107 114 / 10%);
+
+  /* Map */
+  --color-track-background: #EAEAEC;
+  --color-track-line: #D0D0D5;
 }
 
 @media (prefers-color-scheme: dark) {

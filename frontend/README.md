@@ -74,3 +74,10 @@ feature/* → develop
 develop → main
 ```
 Direct pushes to  `main`  should be avoided. Development work should be completed through feature branches and reviewed through Pull Requests.
+
+## UI Design System
+Reusable UI components based on the Pit Stop Drop Figma design system are located in:
+```text
+src/components/ui/
+```
+See details in [UI Components README](./src/components/ui/README.md)
