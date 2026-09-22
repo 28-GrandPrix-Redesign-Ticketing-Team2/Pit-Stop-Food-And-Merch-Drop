@@ -5,6 +5,7 @@ import {
 } from "next/font/google";
 import "./globals.css";
 import { DemoProvider } from "@/components/DemoProvider";
+import AppShell from "@/components/AppShell";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -42,7 +43,9 @@ export default function RootLayout({
       >
         {/* Makes Demo Mode available across all pages */}
         <DemoProvider>
-          {children}
+          <AppShell>
+            {children}
+          </AppShell>
         </DemoProvider>
       </body>
     </html>
