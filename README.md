@@ -25,4 +25,4 @@ The concept also supports features such as:
   
 
 ## Getting Started
-See the [Pit Stop Food & Merch Drop setup guide](./pit-stop-food-and-merch-drop/README.md) for installation and development instructions.
+See the [Pit Stop Food & Merch Drop setup guide](./frontend/README.md) for installation and development instructions.
