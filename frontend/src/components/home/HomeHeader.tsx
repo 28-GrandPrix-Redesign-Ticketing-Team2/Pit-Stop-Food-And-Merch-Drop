@@ -64,17 +64,12 @@ export default function HomeHeader({
                         className="text-[var(--color-brand-primary)]"
                     />
 
-                    <span
-                        className="
-                            font-[var(--font-inter)]
-                            text-[12px]
-                            font-semibold
-                            leading-[18px]
-                            text-[var(--color-text-primary)]
-                        "
+                    <Typography
+                        variant="meta"
+                        className="text-[12px] leading-[18px]"
                     >
                         GP-3829-X
-                    </span>
+                    </Typography>
                 </div>
 
                 {/* Settings */}
