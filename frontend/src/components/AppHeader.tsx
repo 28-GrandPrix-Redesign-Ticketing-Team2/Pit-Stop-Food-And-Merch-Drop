@@ -3,13 +3,13 @@
 import { Icon } from "@iconify/react";
 import Typography from "@/components/ui/Typography";
 
-type HomeHeaderProps = {
+type AppHeaderProps = {
     onSettingsClick?: () => void;
 };
 
-export default function HomeHeader({
+export default function AppHeader({
     onSettingsClick,
-}: HomeHeaderProps) {
+}: AppHeaderProps) {
     return (
         <header
             className="

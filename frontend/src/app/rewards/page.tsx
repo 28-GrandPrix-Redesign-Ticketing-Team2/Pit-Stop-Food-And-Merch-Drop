@@ -2,7 +2,7 @@ import Typography from "@/components/ui/Typography";
 
 export default function Reward() {
     return (
-        <main className="mx-auto min-h-screen w-full max-w-[430px] p-4">
+        <div>
             <Typography variant="screenTitle">
                 REWARD
             </Typography>
@@ -13,6 +13,6 @@ export default function Reward() {
             >
                 Reward page coming soon.
             </Typography>
-        </main>
+        </div>
     );
 }
