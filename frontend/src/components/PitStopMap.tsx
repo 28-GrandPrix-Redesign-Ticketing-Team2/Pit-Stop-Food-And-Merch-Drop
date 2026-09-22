@@ -7,7 +7,6 @@ import { ALBERT_PARK_CORDINATES, DEMO_LOCATION, PIT_STOPS_CORDINATES } from "@/d
 import { Icon } from "@iconify/react";
 import { useDemoMode } from "./DemoProvider";
 import Typography from "./ui/Typography";
-import { PIT_STOPS } from "@/data/pitStopConstantData";
 
 
 type PitStopMapProps = {
