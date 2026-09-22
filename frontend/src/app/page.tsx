@@ -1,8 +1,8 @@
 "use client";
 
+import HomeContent from "@/components/home/HomeContent";
 import HomeHeader from "@/components/home/HomeHeader";
 import SettingsPopUp from "@/components/home/SettingsPopUp";
-import PitStopMap from "@/components/PitStopMap";
 import { useState } from "react";
 
 export default function Home() {
@@ -16,7 +16,8 @@ export default function Home() {
         {/* Header */}
         <HomeHeader onSettingsClick={() => setSettingsOpen(true)} />
 
-        {/* Map Component */}
+        {/* Main content */}
+        <HomeContent />
 
         {/* Settings */}
         <SettingsPopUp
