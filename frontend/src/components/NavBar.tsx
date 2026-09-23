@@ -91,8 +91,8 @@ export default function NavBar() {
                             height="22"
                             className={
                                 isActive
-                                    ? "text-[var(--color-brand-primary)]"
-                                    : "text-[var(--color-text-muted)]"
+                                    ? "!text-[var(--color-brand-primary)]"
+                                    : "!text-[var(--color-text-muted)]"
                             }
                         />
 
@@ -100,8 +100,8 @@ export default function NavBar() {
                             variant="nav"
                             className={
                                 isActive
-                                    ? "font-semibold text-[var(--color-brand-primary)]"
-                                    : "text-[var(--color-text-muted)]"
+                                    ? "font-semibold !text-[var(--color-brand-primary)]"
+                                    : "!text-[var(--color-text-muted)]"
                             }
                         >
                             {item.label}

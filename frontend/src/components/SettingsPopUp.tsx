@@ -15,13 +15,13 @@ export default function SettingsPopUp({
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 mx-auto w-full max-w-[430px]">
+        <div className="fixed inset-0 z-[100] mx-auto w-full max-w-[430px]">
             {/* Overlay */}
             <button
                 type="button"
                 aria-label="Close settings"
                 onClick={onClose}
-                className="absolute inset-0 bg-black/40"
+                className="absolute inset-0 z-0 bg-black/40"
             />
 
             {/* Bottom sheet */}
@@ -52,7 +52,7 @@ export default function SettingsPopUp({
 
                 <Typography
                     variant="body"
-                    className="mt-1 block text-[var(--color-text-muted)]"
+                    className="mt-1 block !text-[var(--color-text-muted)]"
                 >
                     App configuration and demo options.
                 </Typography>
@@ -102,7 +102,7 @@ export default function SettingsPopUp({
                                         block
                                         text-[12px]
                                         leading-[18px]
-                                        text-[var(--color-text-muted)]
+                                        !text-[var(--color-text-muted)]
                                     "
                                 >
                                     Pre-fills cart & pit stop for presentations
@@ -160,7 +160,7 @@ export default function SettingsPopUp({
                         variant="button"
                         className="
                             tracking-[0.64px]
-                            text-[var(--color-text-primary)]
+                            !text-[var(--color-text-primary)]
                         "
                     >
                         CLOSE

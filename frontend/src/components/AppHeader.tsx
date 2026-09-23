@@ -13,6 +13,9 @@ export default function AppHeader({
     return (
         <header
             className="
+                sticky
+                top-0
+                z-40
                 flex
                 w-full
                 items-center
