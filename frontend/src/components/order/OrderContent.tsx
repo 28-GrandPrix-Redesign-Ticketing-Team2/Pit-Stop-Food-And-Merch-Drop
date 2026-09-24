@@ -284,7 +284,14 @@ export default function OrderContent() {
                 <ReviewOrderButton
                     itemCount={totalItems}
                     totalPrice={totalPrice}
-                    onClick={() => router.push("/checkout")}
+                    onClick={() => {
+                        // Require a Pit Stop before continuing to Checkout.
+                        if (!selectedPitStopId) {
+                            setChangePitStopOpen(true);
+                            return;
+                        }
+                        router.push("/checkout");
+                    }}
                 />
 
             </div>
