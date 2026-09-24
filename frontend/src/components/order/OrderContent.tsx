@@ -11,12 +11,19 @@ import Typography from "@/components/ui/Typography";
 import OrderItemCard from "@/components/order/OrderItemCard";
 import { useOrder } from "@/components/order/OrderProvider";
 import { PIT_STOPS } from "@/data/pitStopConstantData";
+import ChangePitStopPopup from "./ChangePitStopPopup";
 
 type Category =
     (typeof CATEGORIES)[number]["id"];
 
 export default function OrderContent() {
     const router = useRouter();
+
+    // Controls the Change Collection Point popup.
+    const [
+        changePitStopOpen,
+        setChangePitStopOpen,
+    ] = useState(false);
 
     // Shared selected pit stop
     const {
@@ -119,9 +126,7 @@ export default function OrderContent() {
                             {/* Rouites back to home */}
                             <Button
                                 type="button"
-                                onClick={() =>
-                                    router.push("/")
-                                }
+                                onClick={() => setChangePitStopOpen(true)}
                                 className="
                                     ml-auto
                                     !h-auto
@@ -258,6 +263,15 @@ export default function OrderContent() {
                 </div>
 
             </div>
+            {/* Change Collection Point popup */}
+            <ChangePitStopPopup
+                isOpen={changePitStopOpen}
+                selectedPitStopId={selectedPitStopId}
+                onSelect={setSelectedPitStopId}
+                onClose={() =>
+                    setChangePitStopOpen(false)
+                }
+            />
         </main>
     );
 }
