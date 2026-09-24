@@ -8,13 +8,26 @@ import { CATEGORIES, ORDER_ITEMS } from "@/data/orderConstantData";
 
 import Button from "@/components/ui/Buttons";
 import Typography from "@/components/ui/Typography";
-import OrderItemCard from "./OrderItemCard";
+import OrderItemCard from "@/components/order/OrderItemCard";
+import { useOrder } from "@/components/order/OrderProvider";
+import { PIT_STOPS } from "@/data/pitStopConstantData";
 
 type Category =
     (typeof CATEGORIES)[number]["id"];
 
 export default function OrderContent() {
     const router = useRouter();
+
+    // Shared selected pit stop
+    const {
+        selectedPitStopId,
+        setSelectedPitStopId,
+    } = useOrder();
+
+    // Find the full Pit Stop object for display.
+    const selectedPitStop = PIT_STOPS.find(
+        (stop) => stop.id === selectedPitStopId
+    );
 
     const [category, setCategory] =
         useState<Category>("all");
@@ -98,7 +111,9 @@ export default function OrderContent() {
                                     !text-[var(--color-text-muted)]
                                 "
                             >
-                                DELIVERING TO: PIT STOP M2
+                                {selectedPitStop
+                                    ? `DELIVERING TO: ${selectedPitStop.name}`
+                                    : "SELECT A PIT STOP"}
                             </Typography>
 
                             {/* Rouites back to home */}
@@ -124,7 +139,7 @@ export default function OrderContent() {
                                         !text-[var(--color-brand-primary)]
                                     "
                                 >
-                                    CHANGE
+                                    {selectedPitStop ? "CHANGE" : "SELECT"}
                                 </Typography>
                             </Button>
                         </div>

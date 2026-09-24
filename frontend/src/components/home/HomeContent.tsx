@@ -6,13 +6,17 @@ import Card from "@/components/ui/Card";
 import StatusBadge from "@/components/ui/StatusBadge";
 import Typography from "@/components/ui/Typography";
 import { PIT_STOPS } from "@/data/pitStopConstantData";
-import { useState } from "react";
 import SelectedPitStopCard from "./SelectedPitStopCard";
+import { useOrder } from "@/components/order/OrderProvider";
 
 export default function HomeContent() {
-    const [selectedPitStopId, setSelectedPitStopId] =
-        useState<string | null>(null);
+    // Shared selected pit stop
+    const {
+        selectedPitStopId,
+        setSelectedPitStopId,
+    } = useOrder();
 
+    // Find the full Pit Stop object for display.
     const selectedPitStop = PIT_STOPS.find(
         (stop) => stop.id === selectedPitStopId
     );

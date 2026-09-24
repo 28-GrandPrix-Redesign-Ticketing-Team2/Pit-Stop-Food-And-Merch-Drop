@@ -4,6 +4,7 @@ import Button from "@/components/ui/Buttons";
 import Card from "@/components/ui/Card";
 import StatusBadge from "@/components/ui/StatusBadge";
 import Typography from "@/components/ui/Typography";
+import { useRouter } from "next/navigation";
 
 type SelectedPitStopCardProps = {
     stop: {
@@ -23,6 +24,8 @@ export default function SelectedPitStopCard({
     stop,
     onViewMap,
 }: SelectedPitStopCardProps) {
+    const router = useRouter();
+
     return (
         <Card className="!rounded-[14px] !p-4">
             {/* Stop details */}
@@ -94,8 +97,9 @@ export default function SelectedPitStopCard({
 
             {/* Actions */}
             <div className="mt-[14px] grid grid-cols-2 gap-[10px]">
-                {/* Primary button - use existing component */}
+                {/* Primary button */}
                 <Button
+                    onClick={() => router.push("/order")}
                     className="
                         flex
                         !h-[46px]

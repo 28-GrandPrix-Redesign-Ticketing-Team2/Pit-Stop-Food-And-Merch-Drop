@@ -6,6 +6,7 @@ import {
 import "./globals.css";
 import { DemoProvider } from "@/components/DemoProvider";
 import AppShell from "@/components/AppShell";
+import OrderProvider from "@/components/order/OrderProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -43,9 +44,12 @@ export default function RootLayout({
       >
         {/* Makes Demo Mode available across all pages */}
         <DemoProvider>
-          <AppShell>
-            {children}
-          </AppShell>
+          {/* Keeps selected Pit Stop and cart available across pages */}
+          <OrderProvider>
+            <AppShell>
+              {children}
+            </AppShell>
+          </OrderProvider>
         </DemoProvider>
       </body>
     </html>
