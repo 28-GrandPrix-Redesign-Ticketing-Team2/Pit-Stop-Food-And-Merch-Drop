@@ -6,13 +6,17 @@ import Card from "@/components/ui/Card";
 import StatusBadge from "@/components/ui/StatusBadge";
 import Typography from "@/components/ui/Typography";
 import { PIT_STOPS } from "@/data/pitStopConstantData";
-import { useState } from "react";
 import SelectedPitStopCard from "./SelectedPitStopCard";
+import { useOrder } from "@/components/order/OrderProvider";
 
 export default function HomeContent() {
-    const [selectedPitStopId, setSelectedPitStopId] =
-        useState<string | null>(null);
+    // Shared selected pit stop
+    const {
+        selectedPitStopId,
+        setSelectedPitStopId,
+    } = useOrder();
 
+    // Find the full Pit Stop object for display.
     const selectedPitStop = PIT_STOPS.find(
         (stop) => stop.id === selectedPitStopId
     );
@@ -35,7 +39,7 @@ export default function HomeContent() {
                     className="
                         block
                         tracking-[0.88px]
-                        text-[var(--color-text-muted)]
+                        !text-[var(--color-text-muted)]
                     "
                 >
                     RACE DAY · GRANDSTAND A
@@ -58,7 +62,7 @@ export default function HomeContent() {
                     className="
                         mt-1
                         block
-                        text-[var(--color-text-muted)]
+                        !text-[var(--color-text-muted)]
                     "
                 >
                     Tap a pit stop to see wait times and order from that location.
@@ -152,7 +156,7 @@ export default function HomeContent() {
                                         mt-1
                                         block
                                         text-center
-                                        text-[var(--color-text-muted)]
+                                        !text-[var(--color-text-muted)]
                                     "
                             >
                                 Tap any marker on the map to see live queue
@@ -170,7 +174,7 @@ export default function HomeContent() {
                     className="
                             block
                             tracking-[0.66px]
-                            text-[var(--color-text-muted)]
+                            !text-[var(--color-text-muted)]
                         "
                 >
                     ALL PIT STOPS
@@ -241,7 +245,7 @@ export default function HomeContent() {
 
                                             <Typography
                                                 variant="body"
-                                                className="text-[var(--color-text-muted)]"
+                                                className="!text-[var(--color-text-muted)]"
                                             >
                                                 {stop.distance}
                                             </Typography>
@@ -286,7 +290,7 @@ function LegendItem({
                 className="
                     text-[11px]
                     leading-[16.5px]
-                    text-[var(--color-text-muted)]
+                    !text-[var(--color-text-muted)]
                 "
             >
                 {label}
