@@ -12,6 +12,7 @@ import OrderItemCard from "@/components/order/OrderItemCard";
 import { useOrder } from "@/components/order/OrderProvider";
 import { PIT_STOPS } from "@/data/pitStopConstantData";
 import ChangePitStopPopup from "./ChangePitStopPopup";
+import ReviewOrderButton from "./ReviewOrderButton";
 
 type Category =
     (typeof CATEGORIES)[number]["id"];
@@ -48,6 +49,24 @@ export default function OrderContent() {
                 ])
             )
         );
+
+    // Count all selected items in the cart.
+    const totalItems = useMemo(() => {
+        return Object.values(quantities).reduce(
+            (total, quantity) => total + quantity,
+            0
+        );
+    }, [quantities]);
+
+    // Calculate total price using quantity × item price.
+    const totalPrice = useMemo(() => {
+        return ORDER_ITEMS.reduce(
+            (total, item) =>
+                total +
+                item.price * (quantities[item.id] ?? 0),
+            0
+        );
+    }, [quantities]);
 
     const visibleItems = useMemo(() => {
         if (category === "all") {
@@ -90,7 +109,7 @@ export default function OrderContent() {
                     bg-[var(--color-page-background)]
                 "
             >
-                <div className="flex-1 overflow-y-auto pb-[82px]">
+                <div className="flex-1 overflow-y-auto pb-[155px]">
 
                     {/* Delivery Title */}
                     <section
@@ -261,6 +280,12 @@ export default function OrderContent() {
                         )}
                     </section>
                 </div>
+
+                <ReviewOrderButton
+                    itemCount={totalItems}
+                    totalPrice={totalPrice}
+                    onClick={() => router.push("/checkout")}
+                />
 
             </div>
             {/* Change Collection Point popup */}
