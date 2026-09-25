@@ -2,7 +2,7 @@
 
 import { Icon } from "@iconify/react";
 import Typography from "@/components/ui/Typography";
-import BottomPopUp from "@/components/ui/BottomPopUp";
+import BottomPopUp from "@/components/popUp/BottomPopUp";
 
 type SettingsPopUpProps = {
     isOpen: boolean;

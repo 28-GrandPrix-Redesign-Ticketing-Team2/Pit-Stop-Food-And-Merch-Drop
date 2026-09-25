@@ -9,11 +9,13 @@ import {
 } from "react";
 
 import { ORDER_ITEMS } from "@/data/orderConstantData";
+import { PIT_STOPS, PitStop, PitStopId } from "@/data/pitStopConstantData";
 
 type OrderContextType = {
     // Selected Pit Stop used across Home, Order and Checkout.
-    selectedPitStopId: string | null;
-    setSelectedPitStopId: (id: string) => void;
+    selectedPitStopId: PitStopId | null;
+    selectedPitStop: PitStop | undefined;
+    setSelectedPitStopId: (id: PitStopId) => void;
 
     // Cart quantities
     quantities: Record<string, number>;
@@ -29,6 +31,7 @@ const OrderContext = createContext<OrderContextType | undefined>(
     undefined
 );
 
+
 type OrderProviderProps = {
     children: ReactNode;
 };
@@ -38,7 +41,15 @@ export default function OrderProvider({
 }: OrderProviderProps) {
     // Store the selected Pit Stop globally.
     const [selectedPitStopId, setSelectedPitStopId] =
-        useState<string | null>(null);
+        useState<PitStopId | null>(null);
+
+    // Full selected Pit Stop object used across Home, Order and Checkout.
+    const selectedPitStop = useMemo(() => {
+        return PIT_STOPS.find(
+            (stop) =>
+                stop.id === selectedPitStopId
+        );
+    }, [selectedPitStopId]);
 
     // Create quantity 0 for every order item.
     const [quantities, setQuantities] = useState<
@@ -94,6 +105,7 @@ export default function OrderProvider({
     return (
         <OrderContext.Provider
             value={{
+                selectedPitStop,
                 selectedPitStopId,
                 setSelectedPitStopId,
                 quantities,

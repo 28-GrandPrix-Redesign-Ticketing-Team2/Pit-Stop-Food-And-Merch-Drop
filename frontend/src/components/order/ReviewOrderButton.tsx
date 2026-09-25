@@ -4,6 +4,7 @@ import { Icon } from "@iconify/react";
 
 import Button from "@/components/ui/Buttons";
 import Typography from "@/components/ui/Typography";
+import BottomActionBar from "../ui/BottomActionBar";
 
 type ReviewOrderButtonProps = {
     itemCount: number;
@@ -20,23 +21,7 @@ export default function ReviewOrderButton({
     if (itemCount === 0) return null;
 
     return (
-        <div
-            className="
-                fixed
-                bottom-[82px]
-                left-1/2
-                z-40
-                w-full
-                max-w-[430px]
-                -translate-x-1/2
-                border-t
-                border-[var(--color-border)]
-                bg-[var(--color-surface)]
-                px-4
-                pb-1
-                pt-3
-            "
-        >
+        <BottomActionBar>
             <Button
                 type="button"
                 onClick={onClick}
@@ -69,6 +54,6 @@ export default function ReviewOrderButton({
                     {totalPrice.toFixed(2)}
                 </Typography>
             </Button>
-        </div>
+        </BottomActionBar>
     );
 }

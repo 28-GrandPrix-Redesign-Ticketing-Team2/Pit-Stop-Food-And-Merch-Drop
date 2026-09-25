@@ -21,6 +21,7 @@
 
   /* Brand Actions */
   --color-brand-primary: #E10600;
+  --color-action-disabled: #CCCCCC;
 
   /* Status */
   --color-status-success: #00D67A;
@@ -28,6 +29,7 @@
   --color-status-info: #2F80FF;
   --color-status-warning: #C8A800;
   --color-status-neutral: #6B6B72;
+  --color-voucher-applied-text: #166534;
 
   /* Status backgrounds - 10% */
   --color-status-success-bg: rgb(0 214 122 / 10%);
