@@ -11,7 +11,7 @@ import Typography from "@/components/ui/Typography";
 import OrderItemCard from "@/components/order/OrderItemCard";
 import { useOrder } from "@/components/order/OrderProvider";
 import { PIT_STOPS } from "@/data/pitStopConstantData";
-import ChangePitStopPopup from "./ChangePitStopPopup";
+import ChangePitStopPopup from "../popUp/ChangePitStopPopup";
 import ReviewOrderButton from "./ReviewOrderButton";
 
 type Category =
@@ -30,6 +30,13 @@ export default function OrderContent() {
     const {
         selectedPitStopId,
         setSelectedPitStopId,
+
+        // Shared cart state.
+        quantities,
+        increaseQuantity,
+        decreaseQuantity,
+        totalItems,
+        totalPrice,
     } = useOrder();
 
     // Find the full Pit Stop object for display.
@@ -40,34 +47,6 @@ export default function OrderContent() {
     const [category, setCategory] =
         useState<Category>("all");
 
-    const [quantities, setQuantities] =
-        useState<Record<string, number>>(
-            Object.fromEntries(
-                ORDER_ITEMS.map((item) => [
-                    item.id,
-                    0,
-                ])
-            )
-        );
-
-    // Count all selected items in the cart.
-    const totalItems = useMemo(() => {
-        return Object.values(quantities).reduce(
-            (total, quantity) => total + quantity,
-            0
-        );
-    }, [quantities]);
-
-    // Calculate total price using quantity × item price.
-    const totalPrice = useMemo(() => {
-        return ORDER_ITEMS.reduce(
-            (total, item) =>
-                total +
-                item.price * (quantities[item.id] ?? 0),
-            0
-        );
-    }, [quantities]);
-
     const visibleItems = useMemo(() => {
         if (category === "all") {
             return ORDER_ITEMS;
@@ -77,23 +56,6 @@ export default function OrderContent() {
             (item) => item.category === category
         );
     }, [category]);
-
-    function increaseQuantity(id: string) {
-        setQuantities((current) => ({
-            ...current,
-            [id]: current[id] + 1,
-        }));
-    }
-
-    function decreaseQuantity(id: string) {
-        setQuantities((current) => ({
-            ...current,
-            [id]: Math.max(
-                0,
-                current[id] - 1
-            ),
-        }));
-    }
 
     return (
         <main className="min-h-screen bg-[var(--color-page-background)]">

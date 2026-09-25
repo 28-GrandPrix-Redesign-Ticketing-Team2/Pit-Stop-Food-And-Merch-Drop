@@ -3,7 +3,15 @@ import { Icon } from "@iconify/react";
 import Button from "@/components/ui/Buttons";
 import Typography from "@/components/ui/Typography";
 
-export default function CheckoutBottomBar() {
+type CheckoutBottomBarProps = {
+    totalItems: number;
+    total: number;
+};
+
+export default function CheckoutBottomBar({
+    totalItems,
+    total,
+}: CheckoutBottomBarProps) {
     return (
         <div
             className="
@@ -22,23 +30,29 @@ export default function CheckoutBottomBar() {
                 pt-3
             "
         >
-            {/* Disabled because cart is empty */}
+
             <Button
                 type="button"
-                disabled
-                className="
+                disabled={totalItems === 0}
+                className={`
                     flex
                     !h-[56px]
                     items-center
                     justify-center
                     gap-2
                     !rounded-[12px]
-                    !bg-[#ccc]
-                    !opacity-100
-                "
+                    ${totalItems === 0
+                        ? "!bg-[#ccc] !opacity-100"
+                        : ""
+                    }
+                `}
             >
                 <Icon
-                    icon="ph:shopping-cart-simple-fill"
+                    icon={
+                        totalItems === 0
+                            ? "ph:shopping-cart-simple-fill"
+                            : "ph:lock-key-fill"
+                    }
                     width="16"
                     height="16"
                 />
@@ -51,7 +65,11 @@ export default function CheckoutBottomBar() {
                         !text-[var(--color-text-on-primary)]
                     "
                 >
-                    NO ITEMS IN CART
+                    {totalItems === 0
+                        ? "NO ITEMS IN CART"
+                        : `PLACE ORDER — $${total.toFixed(
+                            2
+                        )}`}
                 </Typography>
             </Button>
         </div>

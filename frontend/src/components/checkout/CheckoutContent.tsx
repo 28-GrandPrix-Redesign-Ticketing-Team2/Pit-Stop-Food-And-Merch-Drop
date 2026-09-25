@@ -7,12 +7,14 @@ import Typography from "@/components/ui/Typography";
 import { useOrder } from "@/components/order/OrderProvider";
 import { PIT_STOPS } from "@/data/pitStopConstantData";
 
-import ChangePitStopPopup from "@/components/order/ChangePitStopPopup";
+import ChangePitStopPopup from "@/components/popUp/ChangePitStopPopup";
 import CheckoutVoucher from "./CheckoutVoucher";
 import CheckoutPriceBreakdown from "./CheckoutPriceBreakdown";
 import CheckoutRewards from "./CheckoutRewards";
 import CheckoutBottomBar from "./CheckoutBottomBar";
 import CheckoutCollectionPoint from "./CheckoutCollectionPoint";
+import { REWARD_POINT_MULTIPLIER, SERVICE_FEES_ITEMS, SERVICE_FEES_ZERO_ITEMS } from "@/data/checkoutConstantData";
+import CheckoutItems from "./CheckoutItems";
 
 
 export default function CheckoutContent() {
@@ -27,7 +29,21 @@ export default function CheckoutContent() {
     const {
         selectedPitStopId,
         setSelectedPitStopId,
+        quantities,
+        totalItems,
+        totalPrice,
     } = useOrder();
+
+    // Service Fees
+    const serviceFee =
+        totalItems > 0 ? SERVICE_FEES_ITEMS : SERVICE_FEES_ZERO_ITEMS;
+
+    const total =
+        totalPrice + serviceFee;
+
+    // reward points
+    const rewardPoints =
+        Math.round(total * REWARD_POINT_MULTIPLIER);
 
     // Find the full Pit Stop object for display.
     const selectedPitStop = PIT_STOPS.find(
@@ -116,7 +132,9 @@ export default function CheckoutContent() {
                                 !text-[var(--color-text-muted)]
                             "
                         >
-                            YOUR ITEMS
+                            <CheckoutItems
+                                quantities={quantities}
+                            />
                         </Typography>
                     </div>
                 </section>
@@ -125,16 +143,25 @@ export default function CheckoutContent() {
 
                 {/* No order yet, so all prices are zero */}
                 <CheckoutPriceBreakdown
-                    subtotal={0}
-                    serviceFee={0}
-                    total={0}
+                    subtotal={totalPrice}
+                    serviceFee={serviceFee}
+                    total={total}
                 />
 
-                <CheckoutRewards points={0} />
+                <CheckoutRewards
+                    points={
+                        totalItems > 0
+                            ? rewardPoints
+                            : 0
+                    }
+                />
             </div>
 
-            {/* Disabled Figma bottom action */}
-            <CheckoutBottomBar />
+            {/* Pit Stop popup*/}
+            <CheckoutBottomBar
+                totalItems={totalItems}
+                total={total}
+            />
 
             {/* Pit Stop popup*/}
             <ChangePitStopPopup

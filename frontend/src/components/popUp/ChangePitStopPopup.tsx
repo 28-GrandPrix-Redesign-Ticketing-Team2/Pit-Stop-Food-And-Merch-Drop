@@ -5,7 +5,7 @@ import StatusBadge from "@/components/ui/StatusBadge";
 import Typography from "@/components/ui/Typography";
 
 import { PIT_STOPS } from "@/data/pitStopConstantData";
-import BottomPopUp from "@/components/ui/BottomPopUp";
+import BottomPopUp from "@/components/popUp/BottomPopUp";
 
 type ChangePitStopPopupProps = {
     isOpen: boolean;
