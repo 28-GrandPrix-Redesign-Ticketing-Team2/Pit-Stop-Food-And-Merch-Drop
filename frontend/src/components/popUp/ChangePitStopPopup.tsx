@@ -3,14 +3,14 @@
 import Card from "@/components/ui/Card";
 import Typography from "@/components/ui/Typography";
 
-import { PIT_STOPS } from "@/data/pitStopConstantData";
+import { PIT_STOPS, PitStopId } from "@/data/pitStopConstantData";
 import BottomPopUp from "@/components/popUp/BottomPopUp";
 import PitStopInfo from "../pitstop/PitStopInfo";
 
 type ChangePitStopPopupProps = {
     isOpen: boolean;
-    selectedPitStopId: string | null;
-    onSelect: (id: string) => void;
+    selectedPitStopId: PitStopId | null;
+    onSelect: (id: PitStopId) => void;
     onClose: () => void;
 };
 
