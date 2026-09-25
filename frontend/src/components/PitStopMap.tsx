@@ -3,15 +3,17 @@
 
 import Map, { GeolocateControl, Marker, NavigationControl } from "react-map-gl/mapbox";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { ALBERT_PARK_CORDINATES, DEMO_LOCATION, PIT_STOPS_CORDINATES } from "@/data/mapConstantData";
 import { Icon } from "@iconify/react";
 import { useDemoMode } from "./DemoProvider";
 import Typography from "./ui/Typography";
 
+import { ALBERT_PARK_CORDINATES, DEMO_LOCATION } from "@/data/mapConstantData";
+import { PitStopId, PIT_STOPS } from "@/data/pitStopConstantData";
+
 
 type PitStopMapProps = {
-    selectedPitStopId: string | null;
-    onSelectPitStop: (id: string) => void;
+    selectedPitStopId: PitStopId | null;
+    onSelectPitStop: (id: PitStopId) => void;
 };
 
 export default function PitStopMap({
@@ -40,7 +42,7 @@ export default function PitStopMap({
         >
 
             {/* Pit Stops locations */}
-            {PIT_STOPS_CORDINATES.map((pitStop) => {
+            {PIT_STOPS.map((pitStop) => {
                 const isSelected =
                     selectedPitStopId === pitStop.id;
 

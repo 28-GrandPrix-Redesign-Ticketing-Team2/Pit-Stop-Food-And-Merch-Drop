@@ -10,7 +10,6 @@ import Button from "@/components/ui/Buttons";
 import Typography from "@/components/ui/Typography";
 import OrderItemCard from "@/components/order/OrderItemCard";
 import { useOrder } from "@/components/order/OrderProvider";
-import { PIT_STOPS } from "@/data/pitStopConstantData";
 import ChangePitStopPopup from "../popUp/ChangePitStopPopup";
 import ReviewOrderButton from "./ReviewOrderButton";
 
@@ -28,6 +27,7 @@ export default function OrderContent() {
 
     // Shared selected pit stop
     const {
+        selectedPitStop,
         selectedPitStopId,
         setSelectedPitStopId,
 
@@ -38,11 +38,6 @@ export default function OrderContent() {
         totalItems,
         totalPrice,
     } = useOrder();
-
-    // Find the full Pit Stop object for display.
-    const selectedPitStop = PIT_STOPS.find(
-        (stop) => stop.id === selectedPitStopId
-    );
 
     const [category, setCategory] =
         useState<Category>("all");
@@ -104,7 +99,7 @@ export default function OrderContent() {
                                     : "SELECT A PIT STOP"}
                             </Typography>
 
-                            {/* Rouites back to home */}
+                            {/* Opens collection point selector */}
                             <Button
                                 type="button"
                                 onClick={() => setChangePitStopOpen(true)}

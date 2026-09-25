@@ -3,23 +3,19 @@
 import { Icon } from "@iconify/react";
 import PitStopMap from "@/components/PitStopMap";
 import Card from "@/components/ui/Card";
-import StatusBadge from "@/components/ui/StatusBadge";
 import Typography from "@/components/ui/Typography";
 import { PIT_STOPS } from "@/data/pitStopConstantData";
 import SelectedPitStopCard from "./SelectedPitStopCard";
 import { useOrder } from "@/components/order/OrderProvider";
+import PitStopInfo from "../pitstop/PitStopInfo";
 
 export default function HomeContent() {
     // Shared selected pit stop
     const {
+        selectedPitStop,
         selectedPitStopId,
         setSelectedPitStopId,
     } = useOrder();
-
-    // Find the full Pit Stop object for display.
-    const selectedPitStop = PIT_STOPS.find(
-        (stop) => stop.id === selectedPitStopId
-    );
 
     return (
         <div className="w-full">
@@ -197,65 +193,10 @@ export default function HomeContent() {
                                     !py-3
                                 "
                             >
-                                <div className="flex items-center justify-between gap-3">
-                                    <div className="flex items-center gap-[10px]">
-                                        {/* Stop number */}
-                                        <div
-                                            className={`
-                                                flex
-                                                h-[30px]
-                                                w-[30px]
-                                                shrink-0
-                                                items-center
-                                                justify-center
-                                                rounded-full
-                                                border
-                                                ${selectedPitStopId === stop.id
-                                                    ? `
-                                                            border-[var(--color-brand-primary)]
-                                                            bg-[var(--color-brand-primary)]
-                                                        `
-                                                    : `
-                                                            border-[var(--color-border)]
-                                                            bg-[var(--color-page-background)]
-                                                        `
-                                                }
-                                            `}
-                                        >
-                                            <Typography
-                                                variant="sectionHeader"
-                                                className={`
-                                                    text-[9px]
-                                                    leading-[16.5px]
-                                                    ${selectedPitStopId === stop.id
-                                                        ? "!text-[var(--color-text-on-primary)]"
-                                                        : ""
-                                                    }
-                                                `}
-                                            >
-                                                {stop.id}
-                                            </Typography>
-                                        </div>
-
-                                        {/* Stop details */}
-                                        <div className="flex flex-col">
-                                            <Typography variant="cardHeading">
-                                                {stop.name}
-                                            </Typography>
-
-                                            <Typography
-                                                variant="body"
-                                                className="!text-[var(--color-text-muted)]"
-                                            >
-                                                {stop.distance}
-                                            </Typography>
-                                        </div>
-                                    </div>
-
-                                    <StatusBadge variant={stop.variant}>
-                                        {stop.status}
-                                    </StatusBadge>
-                                </div>
+                                <PitStopInfo
+                                    stop={stop}
+                                    selected
+                                />
                             </Card>
                         </button>
                     ))}

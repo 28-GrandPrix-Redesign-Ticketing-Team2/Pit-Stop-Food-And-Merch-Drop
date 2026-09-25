@@ -2,38 +2,29 @@ import { Icon } from "@iconify/react";
 
 import Button from "@/components/ui/Buttons";
 import Typography from "@/components/ui/Typography";
+import BottomActionBar from "../ui/BottomActionBar";
 
 type CheckoutBottomBarProps = {
     totalItems: number;
     total: number;
+    hasPitStop: boolean;
 };
 
 export default function CheckoutBottomBar({
     totalItems,
     total,
+    hasPitStop,
 }: CheckoutBottomBarProps) {
-    return (
-        <div
-            className="
-                fixed
-                bottom-[82px]
-                left-1/2
-                z-40
-                w-full
-                max-w-[430px]
-                -translate-x-1/2
-                border-t
-                border-[var(--color-border)]
-                bg-[var(--color-surface)]
-                px-4
-                pb-1
-                pt-3
-            "
-        >
 
+    // Protect direct checkout access
+    const canPlaceOrder =
+        totalItems > 0 && hasPitStop;
+
+    return (
+        <BottomActionBar>
             <Button
                 type="button"
-                disabled={totalItems === 0}
+                disabled={!canPlaceOrder}
                 className={`
                     flex
                     !h-[56px]
@@ -41,8 +32,8 @@ export default function CheckoutBottomBar({
                     justify-center
                     gap-2
                     !rounded-[12px]
-                    ${totalItems === 0
-                        ? "!bg-[#ccc] !opacity-100"
+                    ${!canPlaceOrder
+                        ? "!bg-[var(--color-action-disabled)] !opacity-100"
                         : ""
                     }
                 `}
@@ -67,11 +58,12 @@ export default function CheckoutBottomBar({
                 >
                     {totalItems === 0
                         ? "NO ITEMS IN CART"
-                        : `PLACE ORDER — $${total.toFixed(
-                            2
-                        )}`}
+                        : !hasPitStop
+                            ? "SELECT PIT STOP"
+                            : `PLACE ORDER — $${total.toFixed(2)}`
+                    }
                 </Typography>
             </Button>
-        </div>
+        </BottomActionBar>
     );
 }

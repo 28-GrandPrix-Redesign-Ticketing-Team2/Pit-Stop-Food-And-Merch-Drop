@@ -12,9 +12,7 @@ export const CATEGORIES = [
         id: "merch",
         label: "TEAM MERCH",
     },
-];
-
-
+] as const;
 
 export const ORDER_ITEMS = [
     {
@@ -66,4 +64,4 @@ export const ORDER_ITEMS = [
         icon: "noto:hot-beverage",
         imageBackground: "#fbe9e7",
     },
-];
+] as const;
