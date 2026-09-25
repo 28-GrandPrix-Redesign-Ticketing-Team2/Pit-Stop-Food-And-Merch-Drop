@@ -1,21 +1,22 @@
 "use client";
 
 import { useState } from "react";
-
 import { useOrder } from "@/components/order/OrderProvider";
-import { PIT_STOPS } from "@/data/pitStopConstantData";
 
 import ChangePitStopPopup from "@/components/popUp/ChangePitStopPopup";
+import {
+    CHECKOUT_VOUCHERS,
+    CheckoutVoucherData,
+    REWARD_POINT_MULTIPLIER,
+    SERVICE_FEES_ITEMS,
+    SERVICE_FEES_ZERO_ITEMS
+} from "@/data/checkoutConstantData";
+
 import CheckoutVoucher from "./CheckoutVoucher";
 import CheckoutPriceBreakdown from "./CheckoutPriceBreakdown";
 import CheckoutRewards from "./CheckoutRewards";
 import CheckoutBottomBar from "./CheckoutBottomBar";
 import CheckoutCollectionPoint from "./CheckoutCollectionPoint";
-import {
-    REWARD_POINT_MULTIPLIER,
-    SERVICE_FEES_ITEMS,
-    SERVICE_FEES_ZERO_ITEMS
-} from "@/data/checkoutConstantData";
 import CheckoutItems from "./CheckoutItems";
 
 
@@ -27,8 +28,30 @@ export default function CheckoutContent() {
         setChangePitStopOpen,
     ] = useState(false);
 
+    // Voucher input value
+    const [
+        voucherCode,
+        setVoucherCode,
+    ] = useState("");
+
+    // Currently applied valid voucher
+    const [
+        appliedVoucher,
+        setAppliedVoucher,
+    ] =
+        useState<CheckoutVoucherData | null>(
+            null
+        );
+
+    // Controls invalid voucher message
+    const [
+        voucherInvalid,
+        setVoucherInvalid,
+    ] = useState(false);
+
     // Shared selected pit stop
     const {
+        selectedPitStop,
         selectedPitStopId,
         setSelectedPitStopId,
         quantities,
@@ -40,18 +63,81 @@ export default function CheckoutContent() {
     const serviceFee =
         totalItems > 0 ? SERVICE_FEES_ITEMS : SERVICE_FEES_ZERO_ITEMS;
 
-    const total =
+    // Total before Disc
+    const totalBeforeVoucher =
         totalPrice + serviceFee;
 
-    // reward points
-    const rewardPoints =
-        Math.round(total * REWARD_POINT_MULTIPLIER);
+    // Discount supplied by the currently applied voucher.
+    const voucherDiscount =
+        appliedVoucher?.effect.type ===
+            "discount"
+            ? appliedVoucher.effect.amount
+            : 0;
 
-    // Find the full Pit Stop object for display.
-    const selectedPitStop = PIT_STOPS.find(
-        (stop) =>
-            stop.id === selectedPitStopId
-    );
+    // Complimentary item supplied by the currently applied voucher.
+    const freeItemId =
+        appliedVoucher?.effect.type ===
+            "freeItem"
+            ? appliedVoucher.effect.itemId
+            : null;
+
+    // Final amount
+    const total =
+        totalBeforeVoucher -
+        voucherDiscount;
+
+    // Rewards are calculated before voucher discount so 
+    // e.g. $5 with $1 discount still shows 50pts not 40pts
+    const rewardPoints =
+        Math.round(
+            totalBeforeVoucher *
+            REWARD_POINT_MULTIPLIER
+        );
+
+    // Updates voucher input
+    function handleVoucherCodeChange(
+        value: string
+    ) {
+        setVoucherCode(value);
+
+        // Clear error when user starts editing again
+        if (voucherInvalid) {
+            setVoucherInvalid(false);
+        }
+    }
+
+    // Checks whether entered voucher is valid
+    function handleApplyVoucher() {
+        const normalizedCode =
+            voucherCode
+                .trim()
+                .toUpperCase();
+
+        const voucher =
+            CHECKOUT_VOUCHERS.find(
+                (item) =>
+                    item.code ===
+                    normalizedCode
+            );
+
+        // Invalid voucher state.
+        if (!voucher) {
+            setAppliedVoucher(null);
+            setVoucherInvalid(true);
+            return;
+        }
+
+        // Apply valid voucher.
+        setAppliedVoucher(voucher);
+        setVoucherInvalid(false);
+    }
+
+    // Removes currently applied voucher.
+    function handleRemoveVoucher() {
+        setAppliedVoucher(null);
+        setVoucherCode("");
+        setVoucherInvalid(false);
+    }
 
     return (
         <main className="min-h-screen bg-[var(--color-page-background)]">
@@ -76,14 +162,35 @@ export default function CheckoutContent() {
 
                 <CheckoutItems
                     quantities={quantities}
+                    freeItemId={freeItemId}
+
                 />
 
-                <CheckoutVoucher />
+                <CheckoutVoucher
+                    voucherCode={voucherCode}
+                    appliedVoucher={appliedVoucher}
+                    invalid={voucherInvalid}
+                    onCodeChange={
+                        handleVoucherCodeChange
+                    }
+                    onApply={
+                        handleApplyVoucher
+                    }
+                    onRemove={
+                        handleRemoveVoucher
+                    }
+                />
 
-                {/* No order yet, so all prices are zero */}
                 <CheckoutPriceBreakdown
                     subtotal={totalPrice}
                     serviceFee={serviceFee}
+                    voucherDiscount={voucherDiscount}
+                    voucherLabel={
+                        appliedVoucher?.effect.type ===
+                            "discount"
+                            ? appliedVoucher.title
+                            : undefined
+                    }
                     total={total}
                 />
 

@@ -65,3 +65,6 @@ export const ORDER_ITEMS = [
         imageBackground: "#fbe9e7",
     },
 ] as const;
+
+export type OrderItem =
+    (typeof ORDER_ITEMS)[number];

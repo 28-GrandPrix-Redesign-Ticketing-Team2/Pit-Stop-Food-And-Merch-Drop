@@ -4,12 +4,16 @@ import Typography from "@/components/ui/Typography";
 type CheckoutPriceBreakdownProps = {
     subtotal: number;
     serviceFee: number;
+    voucherDiscount: number;
+    voucherLabel?: string;
     total: number;
 };
 
 export default function CheckoutPriceBreakdown({
     subtotal,
     serviceFee,
+    voucherDiscount,
+    voucherLabel,
     total,
 }: CheckoutPriceBreakdownProps) {
     return (
@@ -42,6 +46,15 @@ export default function CheckoutPriceBreakdown({
                     label="Service fee"
                     value={`$${serviceFee.toFixed(2)}`}
                 />
+
+                {/* Reward Discount voucher */}
+                {voucherDiscount > 0 && (
+                    <PriceRow
+                        label={`Voucher (${voucherLabel})`}
+                        value={`−$${voucherDiscount.toFixed(2)}`}
+                        success
+                    />
+                )}
 
                 <div
                     className="

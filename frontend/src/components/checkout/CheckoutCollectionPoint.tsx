@@ -4,7 +4,7 @@ import Button from "@/components/ui/Buttons";
 import Card from "@/components/ui/Card";
 import Typography from "@/components/ui/Typography";
 
-import { PIT_STOPS, PitStop } from "@/data/pitStopConstantData";
+import { PitStop } from "@/data/pitStopConstantData";
 import PitStopInfo from "../pitstop/PitStopInfo";
 
 
