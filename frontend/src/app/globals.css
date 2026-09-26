@@ -42,6 +42,11 @@
   /* Map */
   --color-track-background: #EAEAEC;
   --color-track-line: #D0D0D5;
+
+  /* Widths */
+  --app-max-width: 430px;
+  --app-header-height: 57px;
+  --bottom-nav-height: 82px;
 }
 
 @media (prefers-color-scheme: dark) {
