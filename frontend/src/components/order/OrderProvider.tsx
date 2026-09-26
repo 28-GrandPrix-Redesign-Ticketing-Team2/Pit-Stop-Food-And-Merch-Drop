@@ -8,8 +8,28 @@ import {
     useState,
 } from "react";
 
-import { ORDER_ITEMS } from "@/data/orderConstantData";
+import { ORDER_ITEMS, OrderItem } from "@/data/orderConstantData";
 import { PIT_STOPS, PitStop, PitStopId } from "@/data/pitStopConstantData";
+import { CollectStatus } from "@/data/collectConstantData";
+
+// Stored unitPrice
+export type ActiveOrderItem = {
+    itemId: OrderItem["id"];
+    quantity: number;
+    unitPrice: number;
+};
+
+export type ActiveOrder = {
+    reference: string;
+    collectionCode: string;
+    pitStopId: PitStopId;
+    items: ActiveOrderItem[];
+    totalPaid: number;
+    rewardPoints: number;
+    status: CollectStatus;
+    estimatedMinutes?: number;
+    qrCodeSrc?: string;
+};
 
 type OrderContextType = {
     // Selected Pit Stop used across Home, Order and Checkout.
@@ -25,12 +45,16 @@ type OrderContextType = {
     // Computed cart info
     totalItems: number;
     totalPrice: number;
+
+    // Placed order used by Collect.
+    activeOrder: ActiveOrder | null;
+    setActiveOrder: (order: ActiveOrder | null) => void;
+    updateActiveOrderStatus: (status: CollectStatus) => void;
 };
 
 const OrderContext = createContext<OrderContextType | undefined>(
     undefined
 );
-
 
 type OrderProviderProps = {
     children: ReactNode;
@@ -52,9 +76,7 @@ export default function OrderProvider({
     }, [selectedPitStopId]);
 
     // Create quantity 0 for every order item.
-    const [quantities, setQuantities] = useState<
-        Record<string, number>
-    >(
+    const [quantities, setQuantities] = useState<Record<string, number>>(
         Object.fromEntries(
             ORDER_ITEMS.map((item) => [
                 item.id,
@@ -63,6 +85,11 @@ export default function OrderProvider({
         )
     );
 
+    // Placed order shown on Collect
+    // Null means there is currently no order to collect
+    const [activeOrder, setActiveOrder] =
+        useState<ActiveOrder | null>(null);
+
     // Add one item.
     function increaseQuantity(id: string) {
         setQuantities((current) => ({
@@ -70,6 +97,36 @@ export default function OrderProvider({
             [id]: (current[id] ?? 0) + 1,
         }));
     }
+
+    // TEMP CODE FOR TESTING
+
+    // const [
+    //     activeOrder,
+    //     setActiveOrder,
+    // ] =
+    //     useState<ActiveOrder | null>({
+    //         reference: "GP-77291",
+    //         collectionCode: "77291",
+    //         pitStopId: "M2",
+    //         items: [
+    //             {
+    //                 itemId: "burger",
+    //                 quantity: 1,
+    //                 unitPrice: 16.5,
+    //             },
+    //             {
+    //                 itemId: "cap",
+    //                 quantity: 1,
+    //                 unitPrice: 45,
+    //             },
+    //         ],
+    //         totalPaid: 63,
+    //         rewardPoints: 1260,
+    //         status: "ready",
+    //         estimatedMinutes: 4,
+    //         qrCodeSrc:
+    //             "",
+    //     });
 
     // Remove one item but not <0
     function decreaseQuantity(id: string) {
@@ -102,6 +159,18 @@ export default function OrderProvider({
         );
     }, [quantities]);
 
+    // Updates the lifecycle state of the currently placed order.
+    // - Demo Mode can call this
+    function updateActiveOrderStatus(
+        status: CollectStatus) {
+        setActiveOrder(
+            (current) => {
+                if (!current) { return null; }
+                return { ...current, status, };
+            }
+        );
+    }
+
     return (
         <OrderContext.Provider
             value={{
@@ -113,6 +182,11 @@ export default function OrderProvider({
                 decreaseQuantity,
                 totalItems,
                 totalPrice,
+
+                // Collect order state
+                activeOrder,
+                setActiveOrder,
+                updateActiveOrderStatus,
             }}
         >
             {children}
