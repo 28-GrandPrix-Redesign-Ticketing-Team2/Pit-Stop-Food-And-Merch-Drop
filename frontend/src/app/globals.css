@@ -47,6 +47,17 @@
   --app-max-width: 430px;
   --app-header-height: 57px;
   --bottom-nav-height: 82px;
+
+  /* Collect warning states */
+  --color-status-warning-surface: #FFFBEB;
+  --color-status-warning-text: #7A5800;
+  --color-status-warning-muted: #A07000;
+
+  /* Collect success states */
+  --color-status-success-surface: #F0FDF4;
+  --color-status-success-text: #166534;
+  --color-status-success-muted: #16A34A;
+  --color-status-success-soft-border: #BBF7D0;
 }
 
 @media (prefers-color-scheme: dark) {
