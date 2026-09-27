@@ -64,6 +64,9 @@ type OrderContextType = {
     placeOrder: (
         input: PlaceOrderInput
     ) => ActiveOrder | null;
+
+    // Resets cart, Pit Stop and active order for a new Demo walkthrough
+    resetOrderState: () => void;
 };
 
 const OrderContext = createContext<OrderContextType | undefined>(
@@ -106,6 +109,13 @@ export default function OrderProvider({
     // Null means there is currently no order to collect
     const [activeOrder, setActiveOrder] =
         useState<ActiveOrder | null>(null);
+
+    // Restores the ordering flow to a clean state
+    function resetOrderState() {
+        setSelectedPitStopId(null);
+        setQuantities(createEmptyQuantities());
+        setActiveOrder(null);
+    }
 
     // Add one item.
     function increaseQuantity(id: string) {
@@ -299,6 +309,9 @@ export default function OrderProvider({
 
                 // Demo order placement
                 placeOrder,
+
+                // Demo reset
+                resetOrderState,
             }}
         >
             {children}

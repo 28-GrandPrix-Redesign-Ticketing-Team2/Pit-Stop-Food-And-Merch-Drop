@@ -38,6 +38,9 @@ type RewardsContextType = {
         orderReference: string,
         points: number
     ) => void;
+
+    // Restores the Demo rewards state
+    resetDemoRewards: () => void;
 };
 
 const RewardsContext =
@@ -46,6 +49,30 @@ const RewardsContext =
 type RewardsProviderProps = {
     children: ReactNode;
 };
+
+function createDemoRewardsProfile():
+    RewardsProfile {
+    return {
+        ...MOCK_REWARDS_PROFILE,
+
+        points:
+            DEMO_STARTING_REWARD_POINTS,
+
+        tier: {
+            ...MOCK_REWARDS_PROFILE.tier,
+        },
+
+        badges:
+            MOCK_REWARDS_PROFILE.badges.map(
+                (badge) => ({
+                    ...badge,
+                })
+            ),
+
+        redeemedRewardIds: [],
+        history: [],
+    };
+}
 
 export default function RewardsProvider({
     children,
@@ -63,7 +90,8 @@ export default function RewardsProvider({
 
     // Gives Demo Mode a useful starting rewards balance
     function seedDemoRewards() {
-        if (demoRewardsSeeded.current) return;
+        if (demoRewardsSeeded.current
+        ) return;
 
         demoRewardsSeeded.current = true;
 
@@ -71,15 +99,20 @@ export default function RewardsProvider({
             .current
             .clear();
 
-        setProfile({
-            ...MOCK_REWARDS_PROFILE,
+        setProfile(createDemoRewardsProfile());
+    }
 
-            points:
-                DEMO_STARTING_REWARD_POINTS,
+    // Restarts Rewards for another Demo walkthrough
+    function resetDemoRewards() {
+        // Demo remains enabled, so this remains true
+        demoRewardsSeeded.current = true;
 
-            // Start Demo Mode with clean voucher history
-            history: [],
-        });
+        // Allows new demo orders to earn their points normally
+        awardedOrderReferences
+            .current
+            .clear();
+
+        setProfile(createDemoRewardsProfile());
     }
 
     // Adds points from a completed order Order reference prevents duplicates
@@ -210,6 +243,7 @@ export default function RewardsProvider({
                 // demo
                 seedDemoRewards,
                 awardOrderPoints,
+                resetDemoRewards,
             }}
         >
             {children}

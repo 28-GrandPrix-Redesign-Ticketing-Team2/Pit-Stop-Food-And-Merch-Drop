@@ -5,6 +5,9 @@ import Typography from "@/components/ui/Typography";
 import BottomPopUp from "@/components/popUp/BottomPopUp";
 import { useDemoMode } from "@/components/DemoProvider";
 import { useRewards } from "./reward/RewardsProvider";
+import { useRouter } from "next/navigation";
+import { useOrder } from "./order/OrderProvider";
+import Button from "./ui/Buttons";
 
 type SettingsPopUpProps = {
     isOpen: boolean;
@@ -15,6 +18,8 @@ export default function SettingsPopUp({
     isOpen,
     onClose,
 }: SettingsPopUpProps) {
+    const router = useRouter();
+
     // demmo mode toggle
     const {
         demoMode,
@@ -22,9 +27,9 @@ export default function SettingsPopUp({
     } = useDemoMode();
 
     // seeed for demo
-    const {
-        seedDemoRewards,
-    } = useRewards();
+    const { seedDemoRewards, resetDemoRewards } = useRewards();
+    // demo reset
+    const { resetOrderState, } = useOrder();
 
     function handleDemoToggle() {
         const nextDemoMode =
@@ -34,6 +39,22 @@ export default function SettingsPopUp({
         if (nextDemoMode) { seedDemoRewards(); }
 
         setDemoMode(nextDemoMode);
+    }
+
+    function handleResetDemo() {
+        if (!demoMode) return;
+
+        // Clear order/cart/Pit Stop
+        resetOrderState();
+
+        // Restore 1000 points and clear reward progress/history
+        resetDemoRewards();
+
+        // Close Settings
+        onClose();
+
+        // Start the walkthrough again from Home
+        router.replace("/");
     }
 
     if (!isOpen) return null;
@@ -156,6 +177,44 @@ export default function SettingsPopUp({
                     </button>
                 </div>
             </div>
+
+            {/* Reset Demo */}
+            {demoMode && (
+                <Button
+                    type="button"
+                    onClick={
+                        handleResetDemo
+                    }
+                    className="
+                    mt-4
+                    flex
+                    items-center
+                    justify-center
+                    gap-2
+                    !border
+                    !border-[var(--color-border)]
+                    !bg-[var(--color-surface)]
+                "
+                >
+                    <Icon
+                        icon="ph:arrow-counter-clockwise"
+                        width="18"
+                        height="18"
+                        className="
+                        text-[var(--color-text-primary)]
+                     "
+                    />
+
+                    <Typography
+                        variant="button"
+                        className="
+                        !text-[var(--color-text-primary)]
+                    "
+                    >
+                        RESET DEMO
+                    </Typography>
+                </Button>
+            )}
 
             {/* Close */}
             <button
