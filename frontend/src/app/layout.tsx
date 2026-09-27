@@ -7,6 +7,7 @@ import "./globals.css";
 import { DemoProvider } from "@/components/DemoProvider";
 import AppShell from "@/components/AppShell";
 import OrderProvider from "@/components/order/OrderProvider";
+import RewardsProvider from "@/components/reward/RewardsProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -46,9 +47,11 @@ export default function RootLayout({
         <DemoProvider>
           {/* Keeps selected Pit Stop and cart available across pages */}
           <OrderProvider>
-            <AppShell>
-              {children}
-            </AppShell>
+            <RewardsProvider>
+              <AppShell>
+                {children}
+              </AppShell>
+            </RewardsProvider>
           </OrderProvider>
         </DemoProvider>
       </body>
