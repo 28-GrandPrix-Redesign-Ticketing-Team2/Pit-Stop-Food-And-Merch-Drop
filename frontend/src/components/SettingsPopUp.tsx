@@ -3,6 +3,7 @@
 import { Icon } from "@iconify/react";
 import Typography from "@/components/ui/Typography";
 import BottomPopUp from "@/components/popUp/BottomPopUp";
+import { useDemoMode } from "@/components/DemoProvider";
 
 type SettingsPopUpProps = {
     isOpen: boolean;
@@ -13,6 +14,12 @@ export default function SettingsPopUp({
     isOpen,
     onClose,
 }: SettingsPopUpProps) {
+    // demmo mode toggle
+    const {
+        demoMode,
+        setDemoMode,
+    } = useDemoMode();
+
     if (!isOpen) return null;
 
     return (
@@ -89,30 +96,46 @@ export default function SettingsPopUp({
                         </div>
                     </div>
 
-                    {/* Toggle off */}
+                    {/* demo mode toggle */}
                     <button
                         type="button"
-                        aria-label="Enable demo mode"
-                        className="
-                                relative
-                                h-7
-                                w-12
-                                shrink-0
-                                rounded-full
-                                bg-[var(--color-border)]
-                            "
+                        onClick={() => setDemoMode(!demoMode)}
+                        aria-label={
+                            demoMode
+                                ? "Disable demo mode"
+                                : "Enable demo mode"
+                        }
+                        aria-pressed={demoMode}
+                        className={`
+                            relative
+                            h-7
+                            w-12
+                            shrink-0
+                            rounded-full
+                            transition-colors
+
+                            ${demoMode
+                                ? "bg-[var(--color-brand-primary)]"
+                                : "bg-[var(--color-border)]"
+                            }
+                        `}
                     >
                         <span
-                            className="
-                                    absolute
-                                    left-[3px]
-                                    top-[3px]
-                                    h-[22px]
-                                    w-[22px]
-                                    rounded-full
-                                    bg-[var(--color-surface)]
-                                    shadow-[0_1px_3px_rgba(0,0,0,0.2)]
-                                "
+                            className={`
+                            absolute
+                            top-[3px]
+                            h-[22px]
+                            w-[22px]
+                            rounded-full
+                            bg-[var(--color-surface)]
+                            shadow-[0_1px_3px_rgba(0,0,0,0.2)]
+                            transition-all
+
+                            ${demoMode
+                                    ? "left-[23px]"
+                                    : "left-[3px]"
+                                }
+                        `}
                         />
                     </button>
                 </div>
