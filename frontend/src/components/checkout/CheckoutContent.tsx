@@ -19,14 +19,18 @@ import CheckoutBottomBar from "./CheckoutBottomBar";
 import CheckoutCollectionPoint from "./CheckoutCollectionPoint";
 import CheckoutItems from "./CheckoutItems";
 import { useRewards } from "../reward/RewardsProvider";
+import { useRouter } from "next/navigation";
+import { useDemoMode } from "../DemoProvider";
 
 
 export default function CheckoutContent() {
+    const router = useRouter();
+
+    // demo mode
+    const { demoMode } = useDemoMode();
 
     // vouchures
-    const {
-        markVoucherUsed,
-    } = useRewards();
+    const { markVoucherUsed } = useRewards();
 
     // Controls the Change Collection Point popup.
     const [
@@ -63,6 +67,7 @@ export default function CheckoutContent() {
         quantities,
         totalItems,
         totalPrice,
+        placeOrder,
     } = useOrder();
 
     // Service Fees
@@ -99,6 +104,21 @@ export default function CheckoutContent() {
             totalBeforeVoucher *
             REWARD_POINT_MULTIPLIER
         );
+
+    // demo
+    function handlePlaceOrder() {
+        // Orders can only be placed during the frontend demo mode
+        if (!demoMode) return
+
+        const order =
+            placeOrder({
+                totalPaid: total,
+                rewardPoints,
+            });
+
+        if (!order) return;
+        router.push("/collect");
+    }
 
     // Updates voucher input
     function handleVoucherCodeChange(
@@ -218,6 +238,8 @@ export default function CheckoutContent() {
                 hasPitStop={
                     selectedPitStopId !== null
                 }
+                demoMode={demoMode}
+                onPlaceOrder={handlePlaceOrder}
             />
 
             {/* Pit Stop popup*/}

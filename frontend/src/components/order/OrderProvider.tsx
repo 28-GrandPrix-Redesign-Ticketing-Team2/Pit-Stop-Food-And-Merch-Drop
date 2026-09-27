@@ -10,7 +10,7 @@ import {
 
 import { ORDER_ITEMS, OrderItem } from "@/data/orderConstantData";
 import { PIT_STOPS, PitStop, PitStopId } from "@/data/pitStopConstantData";
-import { CollectStatus } from "@/data/collectConstantData";
+import { COLLECT_STATUS, CollectStatus } from "@/data/collectConstantData";
 
 // Stored unitPrice
 export type ActiveOrderItem = {
@@ -29,6 +29,12 @@ export type ActiveOrder = {
     status: CollectStatus;
     estimatedMinutes?: number;
     qrCodeSrc?: string;
+};
+
+// demo
+type PlaceOrderInput = {
+    totalPaid: number;
+    rewardPoints: number;
 };
 
 type OrderContextType = {
@@ -50,6 +56,11 @@ type OrderContextType = {
     activeOrder: ActiveOrder | null;
     setActiveOrder: (order: ActiveOrder | null) => void;
     updateActiveOrderStatus: (status: CollectStatus) => void;
+
+    // Creates an order from the current cart and Pit Stop
+    placeOrder: (
+        input: PlaceOrderInput
+    ) => ActiveOrder | null;
 };
 
 const OrderContext = createContext<OrderContextType | undefined>(
@@ -59,6 +70,14 @@ const OrderContext = createContext<OrderContextType | undefined>(
 type OrderProviderProps = {
     children: ReactNode;
 };
+
+function createEmptyQuantities() {
+    return Object.fromEntries(
+        ORDER_ITEMS.map(
+            (item) => [item.id, 0]
+        )
+    ) as Record<string, number>;
+}
 
 export default function OrderProvider({
     children,
@@ -77,12 +96,7 @@ export default function OrderProvider({
 
     // Create quantity 0 for every order item.
     const [quantities, setQuantities] = useState<Record<string, number>>(
-        Object.fromEntries(
-            ORDER_ITEMS.map((item) => [
-                item.id,
-                0,
-            ])
-        )
+        createEmptyQuantities()
     );
 
     // Placed order shown on Collect
@@ -159,8 +173,88 @@ export default function OrderProvider({
         );
     }, [quantities]);
 
+    // Creates a placed order from the current cart and selected Pit Stop.
+    function placeOrder({
+        totalPaid,
+        rewardPoints,
+    }: PlaceOrderInput):
+        ActiveOrder | null {
+        // Protect against invalid checkout
+        if (
+            !selectedPitStopId ||
+            totalItems === 0
+        ) { return null }
+
+        // Snapshot only items currently selected in the cart
+        const orderItems:
+            ActiveOrderItem[] =
+            ORDER_ITEMS
+                .filter(
+                    (item) =>
+                        (
+                            quantities[
+                            item.id
+                            ] ?? 0
+                        ) > 0
+                )
+                .map(
+                    (item) => ({
+                        itemId:
+                            item.id,
+
+                        quantity:
+                            quantities[
+                            item.id
+                            ],
+
+                        unitPrice:
+                            item.price,
+                    })
+                );
+
+        // Temporary frontend generated order/collection number
+        const orderNumber =
+            Date.now()
+                .toString()
+                .slice(-5);
+
+        const order:
+            ActiveOrder = {
+            reference:
+                `GP-${orderNumber}`,
+
+            collectionCode:
+                orderNumber,
+
+            pitStopId:
+                selectedPitStopId,
+
+            items:
+                orderItems,
+
+            totalPaid,
+
+            rewardPoints,
+
+            status:
+                COLLECT_STATUS.RECEIVED,
+
+            estimatedMinutes: 4,
+
+            qrCodeSrc: undefined,
+        };
+
+        // Store placed order so Collect can display it
+        setActiveOrder(order);
+
+        // Cart is no longer needed after successful order placement
+        setQuantities(createEmptyQuantities());
+
+        return order;
+    }
+
     // Updates the lifecycle state of the currently placed order.
-    // - Demo Mode can call this
+    // Demo Mode can call this
     function updateActiveOrderStatus(
         status: CollectStatus) {
         setActiveOrder(
@@ -187,6 +281,9 @@ export default function OrderProvider({
                 activeOrder,
                 setActiveOrder,
                 updateActiveOrderStatus,
+
+                // Demo order placement
+                placeOrder,
             }}
         >
             {children}
