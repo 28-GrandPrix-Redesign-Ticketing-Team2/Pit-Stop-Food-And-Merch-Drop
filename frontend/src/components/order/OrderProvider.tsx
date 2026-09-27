@@ -11,6 +11,7 @@ import {
 import { ORDER_ITEMS, OrderItem } from "@/data/orderConstantData";
 import { PIT_STOPS, PitStop, PitStopId } from "@/data/pitStopConstantData";
 import { COLLECT_STATUS, CollectStatus } from "@/data/collectConstantData";
+import { DEMO_QR_CODE_SRC } from "@/data/demoConstantData";
 
 // Stored unitPrice
 export type ActiveOrderItem = {
@@ -225,7 +226,7 @@ export default function OrderProvider({
             });
         }
 
-        // Temporary frontend generated order/collection number
+        // Temporary demo generated order/collection number
         const orderNumber =
             Date.now()
                 .toString()
@@ -254,7 +255,8 @@ export default function OrderProvider({
 
             estimatedMinutes: 4,
 
-            qrCodeSrc: undefined,
+            // Static QR used for Demo Mode collection.
+            qrCodeSrc: DEMO_QR_CODE_SRC,
         };
 
         // Store placed order so Collect can display it

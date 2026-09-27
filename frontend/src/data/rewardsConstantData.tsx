@@ -126,7 +126,7 @@ export type RewardsProfile = {
 
 // Temporary backend-shaped user data
 export const MOCK_REWARDS_PROFILE: RewardsProfile = {
-    points: 2000,
+    points: 0,
 
     tier: {
         current: "FAN",
