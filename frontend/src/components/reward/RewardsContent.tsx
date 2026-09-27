@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import Typography from "@/components/ui/Typography";
-import { MOCK_REWARDS_PROFILE, RedeemReward } from "@/data/rewardsConstantData";
+import { RedeemReward } from "@/data/rewardsConstantData";
 import RewardsTabs from "./RewardsTabs";
 import RewardsProgressCard from "./RewardsProgressCard";
 import RewardsBadgeGrid from "./RewardsBadgeGrid";
