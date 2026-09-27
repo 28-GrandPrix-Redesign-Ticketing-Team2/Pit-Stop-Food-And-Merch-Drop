@@ -3,6 +3,11 @@
 import { Icon } from "@iconify/react";
 import Typography from "@/components/ui/Typography";
 import BottomPopUp from "@/components/popUp/BottomPopUp";
+import { useDemoMode } from "@/components/DemoProvider";
+import { useRewards } from "./reward/RewardsProvider";
+import { useRouter } from "next/navigation";
+import { useOrder } from "./order/OrderProvider";
+import Button from "./ui/Buttons";
 
 type SettingsPopUpProps = {
     isOpen: boolean;
@@ -13,6 +18,45 @@ export default function SettingsPopUp({
     isOpen,
     onClose,
 }: SettingsPopUpProps) {
+    const router = useRouter();
+
+    // demmo mode toggle
+    const {
+        demoMode,
+        setDemoMode,
+    } = useDemoMode();
+
+    // seeed for demo
+    const { seedDemoRewards, resetDemoRewards } = useRewards();
+    // demo reset
+    const { resetOrderState, } = useOrder();
+
+    function handleDemoToggle() {
+        const nextDemoMode =
+            !demoMode;
+
+        // Seed Demo rewards only when Demo Mode is being enabled
+        if (nextDemoMode) { seedDemoRewards(); }
+
+        setDemoMode(nextDemoMode);
+    }
+
+    function handleResetDemo() {
+        if (!demoMode) return;
+
+        // Clear order/cart/Pit Stop
+        resetOrderState();
+
+        // Restore 1000 points and clear reward progress/history
+        resetDemoRewards();
+
+        // Close Settings
+        onClose();
+
+        // Start the walkthrough again from Home
+        router.replace("/");
+    }
+
     if (!isOpen) return null;
 
     return (
@@ -89,34 +133,88 @@ export default function SettingsPopUp({
                         </div>
                     </div>
 
-                    {/* Toggle off */}
+                    {/* demo mode toggle */}
                     <button
                         type="button"
-                        aria-label="Enable demo mode"
-                        className="
-                                relative
-                                h-7
-                                w-12
-                                shrink-0
-                                rounded-full
-                                bg-[var(--color-border)]
-                            "
+                        onClick={handleDemoToggle}
+                        aria-label={
+                            demoMode
+                                ? "Disable demo mode"
+                                : "Enable demo mode"
+                        }
+                        aria-pressed={demoMode}
+                        className={`
+                            relative
+                            h-7
+                            w-12
+                            shrink-0
+                            rounded-full
+                            transition-colors
+
+                            ${demoMode
+                                ? "bg-[var(--color-brand-primary)]"
+                                : "bg-[var(--color-border)]"
+                            }
+                        `}
                     >
                         <span
-                            className="
-                                    absolute
-                                    left-[3px]
-                                    top-[3px]
-                                    h-[22px]
-                                    w-[22px]
-                                    rounded-full
-                                    bg-[var(--color-surface)]
-                                    shadow-[0_1px_3px_rgba(0,0,0,0.2)]
-                                "
+                            className={`
+                            absolute
+                            top-[3px]
+                            h-[22px]
+                            w-[22px]
+                            rounded-full
+                            bg-[var(--color-surface)]
+                            shadow-[0_1px_3px_rgba(0,0,0,0.2)]
+                            transition-all
+
+                            ${demoMode
+                                    ? "left-[23px]"
+                                    : "left-[3px]"
+                                }
+                        `}
                         />
                     </button>
                 </div>
             </div>
+
+            {/* Reset Demo */}
+            {demoMode && (
+                <Button
+                    type="button"
+                    onClick={
+                        handleResetDemo
+                    }
+                    className="
+                    mt-4
+                    flex
+                    items-center
+                    justify-center
+                    gap-2
+                    !border
+                    !border-[var(--color-border)]
+                    !bg-[var(--color-surface)]
+                "
+                >
+                    <Icon
+                        icon="ph:arrow-counter-clockwise"
+                        width="18"
+                        height="18"
+                        className="
+                        text-[var(--color-text-primary)]
+                     "
+                    />
+
+                    <Typography
+                        variant="button"
+                        className="
+                        !text-[var(--color-text-primary)]
+                    "
+                    >
+                        RESET DEMO
+                    </Typography>
+                </Button>
+            )}
 
             {/* Close */}
             <button

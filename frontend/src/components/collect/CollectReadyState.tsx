@@ -152,9 +152,7 @@ export default function CollectReadyState({
                             "
                         >
                             <Image
-                                src={
-                                    order.qrCodeSrc
-                                }
+                                src={order.qrCodeSrc}
                                 alt="Order collection QR code"
                                 width={180}
                                 height={180}

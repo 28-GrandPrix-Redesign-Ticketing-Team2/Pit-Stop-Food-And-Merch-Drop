@@ -164,7 +164,13 @@ export default function HomeContent() {
             </div>
 
             {/* All pit stops */}
-            <section className="px-4 pb-4 pt-[14px]">
+            <section
+                className="
+                    px-4
+                    pb-[calc(var(--bottom-nav-height)+16px)]
+                    pt-[14px]
+                "
+            >
                 <Typography
                     variant="meta"
                     className="

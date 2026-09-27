@@ -4,6 +4,7 @@ import {
     createContext,
     ReactNode,
     useContext,
+    useRef,
     useState,
 } from "react";
 
@@ -16,6 +17,7 @@ import type {
 } from "@/data/rewardsConstantData";
 
 import { CHECKOUT_VOUCHERS } from "@/data/checkoutConstantData";
+import { DEMO_STARTING_REWARD_POINTS } from "@/data/demoConstantData";
 
 type RewardsContextType = {
     profile: RewardsProfile;
@@ -27,42 +29,129 @@ type RewardsContextType = {
     markVoucherUsed: (
         voucherCode: string
     ) => void;
+
+    // Gives Demo Mode its starting rewards balance
+    seedDemoRewards: () => void;
+
+    // Adds points earned from a successfully completed order
+    awardOrderPoints: (
+        orderReference: string,
+        points: number
+    ) => void;
+
+    // Restores the Demo rewards state
+    resetDemoRewards: () => void;
 };
 
 const RewardsContext =
-    createContext<
-        RewardsContextType | undefined
-    >(undefined);
+    createContext<RewardsContextType | undefined>(undefined);
 
 type RewardsProviderProps = {
     children: ReactNode;
 };
 
+function createDemoRewardsProfile():
+    RewardsProfile {
+    return {
+        ...MOCK_REWARDS_PROFILE,
+
+        points:
+            DEMO_STARTING_REWARD_POINTS,
+
+        tier: {
+            ...MOCK_REWARDS_PROFILE.tier,
+        },
+
+        badges:
+            MOCK_REWARDS_PROFILE.badges.map(
+                (badge) => ({
+                    ...badge,
+                })
+            ),
+
+        redeemedRewardIds: [],
+        history: [],
+    };
+}
+
 export default function RewardsProvider({
     children,
 }: RewardsProviderProps) {
-    const [
-        profile,
-        setProfile,
-    ] = useState<RewardsProfile>(
+    const [profile, setProfile] = useState<RewardsProfile>(
         MOCK_REWARDS_PROFILE
     );
+
+    // Stops Demo Mode from repeatedly resetting rewards back to 1000.
+    const demoRewardsSeeded = useRef(false);
+
+    // Stops the same completed order from awarding points twice
+    const awardedOrderReferences =
+        useRef<Set<string>>(new Set());
+
+    // Gives Demo Mode a useful starting rewards balance
+    function seedDemoRewards() {
+        if (demoRewardsSeeded.current
+        ) return;
+
+        demoRewardsSeeded.current = true;
+
+        awardedOrderReferences
+            .current
+            .clear();
+
+        setProfile(createDemoRewardsProfile());
+    }
+
+    // Restarts Rewards for another Demo walkthrough
+    function resetDemoRewards() {
+        // Demo remains enabled, so this remains true
+        demoRewardsSeeded.current = true;
+
+        // Allows new demo orders to earn their points normally
+        awardedOrderReferences
+            .current
+            .clear();
+
+        setProfile(createDemoRewardsProfile());
+    }
+
+    // Adds points from a completed order Order reference prevents duplicates
+    function awardOrderPoints(
+        orderReference: string,
+        points: number
+    ) {
+        if (awardedOrderReferences
+            .current
+            .has(orderReference)
+        ) return;
+
+
+        awardedOrderReferences
+            .current
+            .add(orderReference);
+
+        setProfile(
+            (current) => ({
+                ...current,
+
+                points:
+                    current.points +
+                    points,
+            })
+        );
+    }
 
     function redeemReward(
         reward: RedeemReward
     ) {
         // Must have enough points
-        if (
-            profile.points <
-            reward.pointsCost
-        ) {
+        if (profile.points < reward.pointsCost) {
             return null;
         }
 
         // Reward needs a real Checkout voucher
-        if (!reward.voucherId) {
-            return null;
-        }
+        if (!reward.voucherId) return null;
+
 
         // Find voucher from the single checkout voucher source
         const voucher =
@@ -105,6 +194,11 @@ export default function RewardsProvider({
                     current.points -
                     reward.pointsCost,
 
+                redeemedRewardIds: [
+                    ...current.redeemedRewardIds,
+                    reward.id,
+                ],
+
                 history: [
                     historyEntry,
                     ...current.history,
@@ -145,6 +239,11 @@ export default function RewardsProvider({
                 profile,
                 redeemReward,
                 markVoucherUsed,
+
+                // demo
+                seedDemoRewards,
+                awardOrderPoints,
+                resetDemoRewards,
             }}
         >
             {children}

@@ -8,23 +8,32 @@ type CheckoutBottomBarProps = {
     totalItems: number;
     total: number;
     hasPitStop: boolean;
+
+    // demo mode 
+    demoMode: boolean;
+    // place order
+    onPlaceOrder: () => void;
 };
 
 export default function CheckoutBottomBar({
     totalItems,
     total,
     hasPitStop,
+    demoMode,
+    onPlaceOrder,
 }: CheckoutBottomBarProps) {
 
     // Protect direct checkout access
     const canPlaceOrder =
-        totalItems > 0 && hasPitStop;
+        totalItems > 0 && hasPitStop &&
+        demoMode;
 
     return (
         <BottomActionBar>
             <Button
                 type="button"
                 disabled={!canPlaceOrder}
+                onClick={onPlaceOrder}
                 className={`
                     flex
                     !h-[56px]

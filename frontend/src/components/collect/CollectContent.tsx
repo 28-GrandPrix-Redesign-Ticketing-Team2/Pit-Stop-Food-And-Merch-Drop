@@ -1,6 +1,6 @@
 "use client";
 
-import { useOrder } from "@/components/order/OrderProvider";
+import { ActiveOrder, useOrder } from "@/components/order/OrderProvider";
 import { COLLECT_STATUS } from "@/data/collectConstantData";
 import { PIT_STOPS } from "@/data/pitStopConstantData";
 
@@ -8,12 +8,19 @@ import CollectEmptyState from "./CollectEmptyState";
 import CollectReadyState from "./CollectReadyState";
 import CollectCompleteState from "./CollectCompleteState";
 import CollectProgressState from "../order/CollectProgressState";
+import DemoOrderLifecycle from "../demo/DemoOrderLifecycle";
+import { useDemoMode } from "../DemoProvider";
+import { useRewards } from "../reward/RewardsProvider";
 
 export default function CollectContent() {
     const {
         activeOrder,
         updateActiveOrderStatus,
     } = useOrder();
+
+    // demomode
+    const { demoMode } = useDemoMode();
+    const { awardOrderPoints } = useRewards();
 
     // No placed order yet.
     if (!activeOrder) {
@@ -32,6 +39,18 @@ export default function CollectContent() {
                 <CollectEmptyState />
             </section>
         );
+    }
+
+    // Demo Mode simulates the backend awarding rewards after collection
+    function handleOrderCollected(order: ActiveOrder) {
+        if (demoMode) {
+            awardOrderPoints(
+                order.reference,
+                order.rewardPoints
+            );
+        }
+
+        updateActiveOrderStatus(COLLECT_STATUS.COMPLETED);
     }
 
     // Get the Pit Stop 
@@ -69,10 +88,13 @@ export default function CollectContent() {
         COLLECT_STATUS.PREPARING
     ) {
         return (
-            <CollectProgressState
-                order={activeOrder}
-                pitStop={pitStop}
-            />
+            <div>
+                <DemoOrderLifecycle />
+                <CollectProgressState
+                    order={activeOrder}
+                    pitStop={pitStop}
+                />
+            </div>
         );
     }
 
@@ -84,11 +106,7 @@ export default function CollectContent() {
             <CollectReadyState
                 order={activeOrder}
                 pitStop={pitStop}
-                onCollected={() =>
-                    updateActiveOrderStatus(
-                        COLLECT_STATUS.COMPLETED
-                    )
-                }
+                onCollected={() => handleOrderCollected(activeOrder)}
             />
         );
     }

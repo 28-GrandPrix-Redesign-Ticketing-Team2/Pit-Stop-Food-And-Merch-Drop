@@ -19,14 +19,18 @@ import CheckoutBottomBar from "./CheckoutBottomBar";
 import CheckoutCollectionPoint from "./CheckoutCollectionPoint";
 import CheckoutItems from "./CheckoutItems";
 import { useRewards } from "../reward/RewardsProvider";
+import { useRouter } from "next/navigation";
+import { useDemoMode } from "../DemoProvider";
 
 
 export default function CheckoutContent() {
+    const router = useRouter();
+
+    // demo mode
+    const { demoMode } = useDemoMode();
 
     // vouchures
-    const {
-        markVoucherUsed,
-    } = useRewards();
+    const { markVoucherUsed } = useRewards();
 
     // Controls the Change Collection Point popup.
     const [
@@ -63,6 +67,7 @@ export default function CheckoutContent() {
         quantities,
         totalItems,
         totalPrice,
+        placeOrder,
     } = useOrder();
 
     // Service Fees
@@ -100,6 +105,28 @@ export default function CheckoutContent() {
             REWARD_POINT_MULTIPLIER
         );
 
+    // demo
+    function handlePlaceOrder() {
+        // Orders can only be placed during the frontend demo mode
+        if (!demoMode) return
+
+        const order =
+            placeOrder({
+                totalPaid: total,
+                rewardPoints,
+                freeItemId,
+            });
+
+        if (!order) return;
+
+        if (appliedVoucher) {
+            markVoucherUsed(
+                appliedVoucher.code
+            );
+        }
+        router.push("/collect");
+    }
+
     // Updates voucher input
     function handleVoucherCodeChange(
         value: string
@@ -136,8 +163,6 @@ export default function CheckoutContent() {
         // Apply valid voucher
         setAppliedVoucher(voucher);
         setVoucherInvalid(false);
-        // Update Rewards history
-        markVoucherUsed(voucher.code);
     }
 
     // Removes currently applied voucher
@@ -218,6 +243,8 @@ export default function CheckoutContent() {
                 hasPitStop={
                     selectedPitStopId !== null
                 }
+                demoMode={demoMode}
+                onPlaceOrder={handlePlaceOrder}
             />
 
             {/* Pit Stop popup*/}
