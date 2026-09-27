@@ -3,8 +3,10 @@
 import { useState } from "react";
 
 import Typography from "@/components/ui/Typography";
-import { MOCK_REWARDS_SUMMARY } from "@/data/rewardsConstantData";
+import { MOCK_REWARDS_PROFILE } from "@/data/rewardsConstantData";
 import RewardsTabs from "./RewardsTabs";
+import RewardsProgressCard from "./RewardsProgressCard";
+import RewardsBadgeGrid from "./RewardsBadgeGrid";
 
 export type RewardsTab =
     | "badges"
@@ -21,8 +23,8 @@ export default function RewardsContent() {
     );
 
     // Temporary Rewards data
-    const rewardsSummary =
-        MOCK_REWARDS_SUMMARY;
+    const rewardsProfile =
+        MOCK_REWARDS_PROFILE;
 
     return (
         <section
@@ -109,10 +111,15 @@ export default function RewardsContent() {
                                 !text-[var(--color-text-on-primary)]
                             "
                         >
-                            {rewardsSummary.points.toLocaleString()}
+                            {rewardsProfile.points.toLocaleString()}
                         </Typography>
                     </div>
                 </div>
+
+                {/* Fan tier progress */}
+                <RewardsProgressCard
+                    profile={rewardsProfile}
+                />
 
                 {/* Rewards tabs */}
                 <RewardsTabs
@@ -121,6 +128,13 @@ export default function RewardsContent() {
                         setActiveTab
                     }
                 />
+
+                {/* Tab content */}
+                {activeTab === "badges" && (
+                    <RewardsBadgeGrid
+                        profile={rewardsProfile}
+                    />
+                )}
             </div>
         </section>
     );
