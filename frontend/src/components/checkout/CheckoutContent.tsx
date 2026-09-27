@@ -118,6 +118,12 @@ export default function CheckoutContent() {
             });
 
         if (!order) return;
+
+        if (appliedVoucher) {
+            markVoucherUsed(
+                appliedVoucher.code
+            );
+        }
         router.push("/collect");
     }
 
@@ -157,8 +163,6 @@ export default function CheckoutContent() {
         // Apply valid voucher
         setAppliedVoucher(voucher);
         setVoucherInvalid(false);
-        // Update Rewards history
-        markVoucherUsed(voucher.code);
     }
 
     // Removes currently applied voucher

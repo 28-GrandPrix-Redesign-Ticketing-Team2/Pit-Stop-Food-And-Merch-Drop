@@ -161,6 +161,11 @@ export default function RewardsProvider({
                     current.points -
                     reward.pointsCost,
 
+                redeemedRewardIds: [
+                    ...current.redeemedRewardIds,
+                    reward.id,
+                ],
+
                 history: [
                     historyEntry,
                     ...current.history,
