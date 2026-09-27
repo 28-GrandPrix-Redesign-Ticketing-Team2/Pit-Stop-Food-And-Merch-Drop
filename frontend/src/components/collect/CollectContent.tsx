@@ -8,6 +8,7 @@ import CollectEmptyState from "./CollectEmptyState";
 import CollectReadyState from "./CollectReadyState";
 import CollectCompleteState from "./CollectCompleteState";
 import CollectProgressState from "../order/CollectProgressState";
+import DemoOrderLifecycle from "../demo/DemoOrderLifecycle";
 
 export default function CollectContent() {
     const {
@@ -69,10 +70,13 @@ export default function CollectContent() {
         COLLECT_STATUS.PREPARING
     ) {
         return (
-            <CollectProgressState
-                order={activeOrder}
-                pitStop={pitStop}
-            />
+            <div>
+                <DemoOrderLifecycle />
+                <CollectProgressState
+                    order={activeOrder}
+                    pitStop={pitStop}
+                />
+            </div>
         );
     }
 
