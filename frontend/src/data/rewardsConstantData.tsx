@@ -3,7 +3,8 @@ export const REWARD_BADGES = [
     {
         id: "speedy-pickup",
         name: "SPEEDY PICKUP",
-        description: "Picked up in under 3 mins.",
+        description: "Picked up in under 3 mins",
+        unlockDescription: "Collect your order within 3 minutes of it being marked ready",
         rewardPoints: 500,
         target: 1,
         icon: "ph:lightning-fill",
@@ -11,7 +12,8 @@ export const REWARD_BADGES = [
     {
         id: "order-streak",
         name: "ORDER STREAK",
-        description: "Complete 5 orders.",
+        description: "Complete 5 orders",
+        unlockDescription: "Complete 5 orders",
         rewardPoints: 750,
         target: 5,
         icon: "ph:fire-fill",
@@ -19,7 +21,8 @@ export const REWARD_BADGES = [
     {
         id: "big-spender",
         name: "BIG SPENDER",
-        description: "Spend over $100 total.",
+        description: "Spend over $100 total",
+        unlockDescription: "Accumulate a total spend of $100 or more across all your orders",
         rewardPoints: 1000,
         target: 100,
         icon: "ph:money-fill",
@@ -27,7 +30,8 @@ export const REWARD_BADGES = [
     {
         id: "weekend-warrior",
         name: "WEEKEND WARRIOR",
-        description: "Ordered all 3 race days.",
+        description: "Ordered all 3 race days",
+        unlockDescription: "Ordered all 3 race days",
         rewardPoints: 1000,
         target: 3,
         icon: "ph:flag-checkered-fill",
@@ -35,7 +39,8 @@ export const REWARD_BADGES = [
     {
         id: "podium-finisher",
         name: "PODIUM FINISHER",
-        description: "Order at 3 different events.",
+        description: "Order at 3 different events",
+        unlockDescription: "Order at 3 different events",
         rewardPoints: 1500,
         target: 3,
         icon: "ph:medal-fill",
@@ -44,6 +49,7 @@ export const REWARD_BADGES = [
         id: "early-bird",
         name: "EARLY BIRD",
         description: "Ordered before 11 AM.",
+        unlockDescription: "Place and pay for an order before 11:00 AM on race day",
         rewardPoints: 500,
         target: 1,
         icon: "ph:sun-fill",
@@ -52,6 +58,7 @@ export const REWARD_BADGES = [
         id: "snack-attack",
         name: "SNACK ATTACK",
         description: "Order 3+ items at once.",
+        unlockDescription: "Order 3+ items at once",
         rewardPoints: 1000,
         target: 1,
         icon: "ph:fork-knife-fill",
@@ -60,6 +67,7 @@ export const REWARD_BADGES = [
         id: "vip-fan",
         name: "VIP FAN",
         description: "Reach 2,000 PTS.",
+        unlockDescription: "Accumulate 2,000 points to unlock VIP Fan status and perks",
         rewardPoints: null,
         target: 2000,
         icon: "ph:star-fill",
@@ -72,7 +80,7 @@ export type RewardBadge =
 export type RewardBadgeId =
     RewardBadge["id"];
 
-// Use -specific badge progress
+// Use specific badge progress
 export type UserBadgeProgress = {
     badgeId: RewardBadgeId;
     progress: number;

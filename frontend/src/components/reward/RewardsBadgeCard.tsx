@@ -14,13 +14,16 @@ type BadgeStatus =
 type RewardsBadgeCardProps = {
     badge: RewardBadge;
     userProgress: UserBadgeProgress;
+    onClick: () => void;
 };
+
 
 export default function RewardsBadgeCard({
     badge,
     userProgress,
+    onClick,
 }: RewardsBadgeCardProps) {
-    // Status comes from backend styled user dat.
+    // Status comes from backend styled user data
     const status: BadgeStatus =
         userProgress.earned
             ? "earned"
@@ -45,6 +48,8 @@ export default function RewardsBadgeCard({
 
     return (
         <Card
+            onClick={onClick}
+            ariaLabel={`View ${badge.name} details`}
             className={`
                 min-h-[146px]
                 !rounded-[12px]
