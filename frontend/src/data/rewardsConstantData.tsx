@@ -92,6 +92,24 @@ export type UserBadgeProgress = {
 export type RedeemRewardId =
     RedeemReward["id"];
 
+
+export type RewardHistoryStatus =
+    | "available"
+    | "used";
+
+export type RewardHistoryEntry = {
+    id: string;
+    rewardId: RedeemRewardId;
+
+    // Links to CHECKOUT_VOUCHERS.
+    voucherId: CheckoutVoucherId;
+
+    // Snapshot of actual voucher code
+    voucherCode: string;
+    redeemedAt: string;
+    status: RewardHistoryStatus;
+};
+
 export type RewardsProfile = {
     points: number;
 
@@ -102,13 +120,13 @@ export type RewardsProfile = {
     };
 
     badges: UserBadgeProgress[];
-
     redeemedRewardIds: RedeemRewardId[];
+    history: RewardHistoryEntry[];
 };
 
 // Temporary backend-shaped user data
 export const MOCK_REWARDS_PROFILE: RewardsProfile = {
-    points: 0,
+    points: 2000,
 
     tier: {
         current: "FAN",
@@ -125,6 +143,9 @@ export const MOCK_REWARDS_PROFILE: RewardsProfile = {
             earned: false,
         })
     ),
+
+    // Empty until user redeems something
+    history: [],
 
 
     // Test data

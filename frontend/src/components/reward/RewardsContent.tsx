@@ -10,6 +10,8 @@ import RewardsBadgeGrid from "./RewardsBadgeGrid";
 import { CHECKOUT_VOUCHERS, CheckoutVoucherData } from "@/data/checkoutConstantData";
 import RewardsRedeemList from "./RewardsRedeemList";
 import RedeemVoucherPopup from "./RedeemVoucherPopup";
+import { useRewards } from "./RewardsProvider";
+import RewardsHistory from "./RewardsHistory";
 
 export type RewardsTab =
     | "badges"
@@ -25,13 +27,10 @@ export default function RewardsContent() {
         "badges"
     );
 
-    // Temporary Rewards data
-    const [
-        rewardsProfile,
-        setRewardsProfile,
-    ] = useState(
-        MOCK_REWARDS_PROFILE
-    );
+    const {
+        profile: rewardsProfile,
+        redeemReward,
+    } = useRewards();
 
     // Voucher popup state
     const [
@@ -44,54 +43,22 @@ export default function RewardsContent() {
         null
     );
 
-    function handleRedeem(
-        reward: RedeemReward
-    ) {
-        // Must have enough points
-        if (
-            rewardsProfile.points <
-            reward.pointsCost
-        ) { return }
+    function handleRedeem(reward: RedeemReward) {
+        const historyEntry =
+            redeemReward(reward);
 
-        // Cannot redeem twice
-        if (
-            rewardsProfile.redeemedRewardIds.includes(
-                reward.id
-            )
-        ) return;
-
-        // Reward must link to a real Checkout voucher
-        if (!reward.voucherId) return;
+        if (!historyEntry) return;
 
 
-        // Find the matching voucher from the
-        // single Checkout voucher source
         const voucher =
             CHECKOUT_VOUCHERS.find(
                 (item) =>
                     item.id ===
-                    reward.voucherId
+                    historyEntry.voucherId
             );
 
         if (!voucher) return;
 
-        // Deduct points and mark reward redeemed
-        setRewardsProfile(
-            (current) => ({
-                ...current,
-
-                points:
-                    current.points -
-                    reward.pointsCost,
-
-                redeemedRewardIds: [
-                    ...current.redeemedRewardIds,
-                    reward.id,
-                ],
-            })
-        );
-
-        // Open voucher popup.
         setRedeemedVoucher({
             reward,
             voucher,
@@ -201,7 +168,7 @@ export default function RewardsContent() {
                     }
                 />
 
-                {/* Tab content */}
+                {/* Badge content */}
                 {activeTab === "badges" && (
                     <RewardsBadgeGrid
                         profile={rewardsProfile}
@@ -213,6 +180,15 @@ export default function RewardsContent() {
                     <RewardsRedeemList
                         profile={rewardsProfile}
                         onRedeem={handleRedeem}
+                    />
+                )}
+
+                {/* History content */}
+                {activeTab === "history" && (
+                    <RewardsHistory
+                        history={
+                            rewardsProfile.history
+                        }
                     />
                 )}
 

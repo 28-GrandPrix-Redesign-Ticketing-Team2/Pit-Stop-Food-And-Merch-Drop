@@ -18,9 +18,15 @@ import CheckoutRewards from "./CheckoutRewards";
 import CheckoutBottomBar from "./CheckoutBottomBar";
 import CheckoutCollectionPoint from "./CheckoutCollectionPoint";
 import CheckoutItems from "./CheckoutItems";
+import { useRewards } from "../reward/RewardsProvider";
 
 
 export default function CheckoutContent() {
+
+    // vouchures
+    const {
+        markVoucherUsed,
+    } = useRewards();
 
     // Controls the Change Collection Point popup.
     const [
@@ -127,12 +133,14 @@ export default function CheckoutContent() {
             return;
         }
 
-        // Apply valid voucher.
+        // Apply valid voucher
         setAppliedVoucher(voucher);
         setVoucherInvalid(false);
+        // Update Rewards history
+        markVoucherUsed(voucher.code);
     }
 
-    // Removes currently applied voucher.
+    // Removes currently applied voucher
     function handleRemoveVoucher() {
         setAppliedVoucher(null);
         setVoucherCode("");
