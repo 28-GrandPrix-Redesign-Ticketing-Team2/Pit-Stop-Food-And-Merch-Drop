@@ -6,6 +6,7 @@ export const REWARD_POINT_MULTIPLIER = 10;
 // GP-SAVE05 && GP-BREW01
 export const CHECKOUT_VOUCHERS = [
     {
+        id: "five-dollar-discount",
         code: "GP-SAVE05",
         title: "Reward Discount",
         description: "-$5.00 applied",
@@ -15,6 +16,7 @@ export const CHECKOUT_VOUCHERS = [
         },
     },
     {
+        id: "free-cold-brew",
         code: "GP-BREW01",
         title: "Free Cold Brew",
         description: "Added to your order for free",
@@ -27,6 +29,9 @@ export const CHECKOUT_VOUCHERS = [
 
 export type CheckoutVoucherData =
     (typeof CHECKOUT_VOUCHERS)[number];
+
+export type CheckoutVoucherId =
+    CheckoutVoucherData["id"];
 
 export const INVALID_VOUCHER_MESSAGE =
     "Invalid code. Check your Rewards tab.";

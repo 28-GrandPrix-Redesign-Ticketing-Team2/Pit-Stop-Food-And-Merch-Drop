@@ -3,10 +3,13 @@
 import { useState } from "react";
 
 import Typography from "@/components/ui/Typography";
-import { MOCK_REWARDS_PROFILE } from "@/data/rewardsConstantData";
+import { MOCK_REWARDS_PROFILE, RedeemReward } from "@/data/rewardsConstantData";
 import RewardsTabs from "./RewardsTabs";
 import RewardsProgressCard from "./RewardsProgressCard";
 import RewardsBadgeGrid from "./RewardsBadgeGrid";
+import { CHECKOUT_VOUCHERS, CheckoutVoucherData } from "@/data/checkoutConstantData";
+import RewardsRedeemList from "./RewardsRedeemList";
+import RedeemVoucherPopup from "./RedeemVoucherPopup";
 
 export type RewardsTab =
     | "badges"
@@ -23,8 +26,77 @@ export default function RewardsContent() {
     );
 
     // Temporary Rewards data
-    const rewardsProfile =
-        MOCK_REWARDS_PROFILE;
+    const [
+        rewardsProfile,
+        setRewardsProfile,
+    ] = useState(
+        MOCK_REWARDS_PROFILE
+    );
+
+    // Voucher popup state
+    const [
+        redeemedVoucher,
+        setRedeemedVoucher,
+    ] = useState<{
+        reward: RedeemReward;
+        voucher: CheckoutVoucherData;
+    } | null>(
+        null
+    );
+
+    function handleRedeem(
+        reward: RedeemReward
+    ) {
+        // Must have enough points
+        if (
+            rewardsProfile.points <
+            reward.pointsCost
+        ) { return }
+
+        // Cannot redeem twice
+        if (
+            rewardsProfile.redeemedRewardIds.includes(
+                reward.id
+            )
+        ) return;
+
+        // Reward must link to a real Checkout voucher
+        if (!reward.voucherId) return;
+
+
+        // Find the matching voucher from the
+        // single Checkout voucher source
+        const voucher =
+            CHECKOUT_VOUCHERS.find(
+                (item) =>
+                    item.id ===
+                    reward.voucherId
+            );
+
+        if (!voucher) return;
+
+        // Deduct points and mark reward redeemed
+        setRewardsProfile(
+            (current) => ({
+                ...current,
+
+                points:
+                    current.points -
+                    reward.pointsCost,
+
+                redeemedRewardIds: [
+                    ...current.redeemedRewardIds,
+                    reward.id,
+                ],
+            })
+        );
+
+        // Open voucher popup.
+        setRedeemedVoucher({
+            reward,
+            voucher,
+        });
+    }
 
     return (
         <section
@@ -135,7 +207,30 @@ export default function RewardsContent() {
                         profile={rewardsProfile}
                     />
                 )}
+
+                {/* Redeem content */}
+                {activeTab === "redeem" && (
+                    <RewardsRedeemList
+                        profile={rewardsProfile}
+                        onRedeem={handleRedeem}
+                    />
+                )}
+
+                <RedeemVoucherPopup
+                    reward={
+                        redeemedVoucher?.reward ??
+                        null
+                    }
+                    voucher={
+                        redeemedVoucher?.voucher ??
+                        null
+                    }
+                    onClose={() =>
+                        setRedeemedVoucher(null)
+                    }
+                />
             </div>
         </section>
     );
 }
+

@@ -1,3 +1,5 @@
+import type { CheckoutVoucherId } from "@/data/checkoutConstantData";
+
 // Static badge catalogue.
 export const REWARD_BADGES = [
     {
@@ -87,6 +89,9 @@ export type UserBadgeProgress = {
     earned: boolean;
 };
 
+export type RedeemRewardId =
+    RedeemReward["id"];
+
 export type RewardsProfile = {
     points: number;
 
@@ -97,6 +102,8 @@ export type RewardsProfile = {
     };
 
     badges: UserBadgeProgress[];
+
+    redeemedRewardIds: RedeemRewardId[];
 };
 
 // Temporary backend-shaped user data
@@ -109,13 +116,16 @@ export const MOCK_REWARDS_PROFILE: RewardsProfile = {
         nextTierPoints: 2000,
     },
 
+    redeemedRewardIds: [],
+
     badges: REWARD_BADGES.map(
         (badge) => ({
             badgeId: badge.id,
             progress: 0,
-            earned: true,
+            earned: false,
         })
     ),
+
 
     // Test data
     // badges: [
@@ -161,3 +171,68 @@ export const MOCK_REWARDS_PROFILE: RewardsProfile = {
     //     },
     // ],
 };
+
+export type RedeemReward = {
+    id: string;
+    name: string;
+    description: string;
+    pointsCost: number;
+    icon: string;
+
+    // Links Rewards to the real Checkout voucher.
+    voucherId: CheckoutVoucherId | null;
+
+};
+
+export const REDEEM_REWARDS: RedeemReward[] = [
+    {
+        id: "free-cold-brew",
+        name: "Free Cold Brew",
+        description:
+            "Adds a free Pit Lane Cold Brew to your next order.",
+        pointsCost: 500,
+        icon: "noto:hot-beverage",
+        voucherId: "free-cold-brew",
+    },
+    {
+        id: "free-fries",
+        name: "Free Fries Upgrade",
+        description:
+            "Makes your High-Downforce Fries free on your next order.",
+        pointsCost: 800,
+        icon: "noto:french-fries",
+
+        // Null becaause checkout has a matching voucher effect
+        voucherId: null,
+    },
+    {
+        id: "five-off",
+        name: "$5 Off Your Order",
+        description:
+            "$5 discount applied automatically at checkout.",
+        pointsCost: 1000,
+        icon: "ph:tag-fill",
+        voucherId:
+            "five-dollar-discount",
+    },
+    {
+        id: "free-burger",
+        name: "Free Burger",
+        description:
+            "Makes your Apex Trackside Burger free on your next order.",
+        pointsCost: 1500,
+        icon: "noto:hamburger",
+
+        // Null becaause checkout has a matching voucher effect
+        voucherId: null,
+    },
+    {
+        id: "vip-pit-lane-pass",
+        name: "VIP Pit Lane Pass",
+        description:
+            "Skip the queue — priority collection at any pit stop.",
+        pointsCost: 2000,
+        icon: "ph:crown-fill",
+        voucherId: null,
+    },
+];
