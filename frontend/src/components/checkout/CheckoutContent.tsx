@@ -114,6 +114,7 @@ export default function CheckoutContent() {
             placeOrder({
                 totalPaid: total,
                 rewardPoints,
+                freeItemId,
             });
 
         if (!order) return;

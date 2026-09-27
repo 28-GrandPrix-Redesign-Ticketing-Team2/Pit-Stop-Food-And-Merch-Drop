@@ -17,6 +17,7 @@ export type ActiveOrderItem = {
     itemId: OrderItem["id"];
     quantity: number;
     unitPrice: number;
+    isFree?: boolean;
 };
 
 export type ActiveOrder = {
@@ -35,6 +36,7 @@ export type ActiveOrder = {
 type PlaceOrderInput = {
     totalPaid: number;
     rewardPoints: number;
+    freeItemId?: OrderItem["id"] | null;
 };
 
 type OrderContextType = {
@@ -177,6 +179,7 @@ export default function OrderProvider({
     function placeOrder({
         totalPaid,
         rewardPoints,
+        freeItemId,
     }: PlaceOrderInput):
         ActiveOrder | null {
         // Protect against invalid checkout
@@ -211,6 +214,16 @@ export default function OrderProvider({
                             item.price,
                     })
                 );
+
+        // Add complimentary voucher item to the final placed order
+        if (freeItemId) {
+            orderItems.push({
+                itemId: freeItemId,
+                quantity: 1,
+                unitPrice: 0,
+                isFree: true,
+            });
+        }
 
         // Temporary frontend generated order/collection number
         const orderNumber =
