@@ -4,6 +4,7 @@ import { Icon } from "@iconify/react";
 import Typography from "@/components/ui/Typography";
 import BottomPopUp from "@/components/popUp/BottomPopUp";
 import { useDemoMode } from "@/components/DemoProvider";
+import { useRewards } from "./reward/RewardsProvider";
 
 type SettingsPopUpProps = {
     isOpen: boolean;
@@ -19,6 +20,21 @@ export default function SettingsPopUp({
         demoMode,
         setDemoMode,
     } = useDemoMode();
+
+    // seeed for demo
+    const {
+        seedDemoRewards,
+    } = useRewards();
+
+    function handleDemoToggle() {
+        const nextDemoMode =
+            !demoMode;
+
+        // Seed Demo rewards only when Demo Mode is being enabled
+        if (nextDemoMode) { seedDemoRewards(); }
+
+        setDemoMode(nextDemoMode);
+    }
 
     if (!isOpen) return null;
 
@@ -99,7 +115,7 @@ export default function SettingsPopUp({
                     {/* demo mode toggle */}
                     <button
                         type="button"
-                        onClick={() => setDemoMode(!demoMode)}
+                        onClick={handleDemoToggle}
                         aria-label={
                             demoMode
                                 ? "Disable demo mode"
