@@ -1,18 +1,5 @@
-import Typography from "@/components/ui/Typography";
+import RewardsContent from "@/components/reward/RewardsContent";
 
 export default function Reward() {
-    return (
-        <div>
-            <Typography variant="screenTitle">
-                REWARD
-            </Typography>
-
-            <Typography
-                variant="body"
-                className="mt-2 block text-[var(--color-text-muted)]"
-            >
-                Reward page coming soon.
-            </Typography>
-        </div>
-    );
+    return <RewardsContent />;
 }
