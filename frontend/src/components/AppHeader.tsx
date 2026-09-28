@@ -2,10 +2,9 @@
 
 import { Icon } from "@iconify/react";
 import Typography from "@/components/ui/Typography";
+import Image from "next/image";
 
-type AppHeaderProps = {
-    onSettingsClick?: () => void;
-};
+type AppHeaderProps = { onSettingsClick?: () => void };
 
 export default function AppHeader({
     onSettingsClick,
@@ -28,20 +27,19 @@ export default function AppHeader({
             "
         >
             {/* Left section */}
-            <div className="flex items-center gap-[7px]">
-                <Icon
-                    icon="ph:flag-checkered-fill"
-                    width="20"
-                    height="20"
-                    className="text-[var(--color-brand-primary)]"
+            <div className="flex items-center">
+                <Image
+                    src="/images/PIT_STOP.png"
+                    alt="Pit Stop - Australian Grand Prix 2026 - RMIT"
+                    width={220}
+                    height={74}
+                    priority
+                    className="
+                        h-auto
+                        w-[210px]
+                        object-contain
+                    "
                 />
-
-                <Typography
-                    variant="sectionHeader"
-                    className="leading-[30px] tracking-[0.8px]"
-                >
-                    PIT STOP
-                </Typography>
             </div>
 
             {/* Right section */}
@@ -100,6 +98,6 @@ export default function AppHeader({
                     />
                 </button>
             </div>
-        </header>
+        </header >
     );
 }
