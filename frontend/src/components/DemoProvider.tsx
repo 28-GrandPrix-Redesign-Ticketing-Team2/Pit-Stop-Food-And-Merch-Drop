@@ -23,7 +23,8 @@ export function DemoProvider({
 }: {
     children: ReactNode;
 }) {
-    const [demoMode, setDemoMode] = useState(false);
+    // demo mode on by default
+    const [demoMode, setDemoMode] = useState(true);
 
     return (
         <DemoContext.Provider
