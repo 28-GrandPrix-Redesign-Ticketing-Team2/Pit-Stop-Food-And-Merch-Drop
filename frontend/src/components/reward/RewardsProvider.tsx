@@ -4,6 +4,7 @@ import {
     createContext,
     ReactNode,
     useContext,
+    useEffect,
     useRef,
     useState,
 } from "react";
@@ -18,6 +19,7 @@ import type {
 
 import { CHECKOUT_VOUCHERS } from "@/data/checkoutConstantData";
 import { DEMO_STARTING_REWARD_POINTS } from "@/data/demoConstantData";
+import { useDemoMode } from "../DemoProvider";
 
 type RewardsContextType = {
     profile: RewardsProfile;
@@ -32,6 +34,7 @@ type RewardsContextType = {
 
     // Gives Demo Mode its starting rewards balance
     seedDemoRewards: () => void;
+
 
     // Adds points earned from a successfully completed order
     awardOrderPoints: (
@@ -77,6 +80,8 @@ function createDemoRewardsProfile():
 export default function RewardsProvider({
     children,
 }: RewardsProviderProps) {
+    const { demoMode } = useDemoMode();
+
     const [profile, setProfile] = useState<RewardsProfile>(
         MOCK_REWARDS_PROFILE
     );
@@ -101,6 +106,11 @@ export default function RewardsProvider({
 
         setProfile(createDemoRewardsProfile());
     }
+
+    // seed rewards
+    useEffect(() => {
+        if (demoMode) { seedDemoRewards() }
+    }, [demoMode]);
 
     // Restarts Rewards for another Demo walkthrough
     function resetDemoRewards() {
